@@ -1,6 +1,11 @@
 # AI_2_group_project
 
 ## Setup
+Start with cloning the repo localy:
+```bash
+git clone https://github.com/ponagr/AI_2_group_project.git
+```
+
 **Install in terminal:**    
 ```bash
 uv venv 
@@ -31,12 +36,12 @@ job_ads_group_project:
   target: dev
 ```
 
-**Extensions**
+**Extensions**  
 För att se filerna i project_descriptions ladda ner:    
 Excel Viewer - av MESCIUS   
 vscode-pdf - av tomoki1207  
 
-## occupation_fields
+## occupation_fields  
 ***occupation_field__label***       -    ***occupation_field__concept_id***     
 Hotell, restaurang, storhushåll     -    ScKy_FHB_7wT   
 Installation, drift, underhåll      -    yhCP_AqT_tns   
