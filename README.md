@@ -1,7 +1,7 @@
 # AI_2_group_project
 
-## Setup
-Start with cloning the repo localy:
+## Setup  
+Start with cloning the repo localy: 
 ```bash
 git clone https://github.com/ponagr/AI_2_group_project.git
 ```
@@ -13,13 +13,13 @@ source .venv/Scripts/activate
 uv pip install -r requirements.txt  
 ```
 
-**setup dbt profiles:**
+**setup dbt profiles:**   
 Open profiles.yml
 ```bash
 code ~/.dbt/profiles.yml
 ```
 
-Paste lines into profiles.yml
+Paste lines into profiles.yml   
 ```yml
 job_ads_group_project:
   outputs:
@@ -36,19 +36,24 @@ job_ads_group_project:
   target: dev
 ```
 
-**Run dbt debug and dbt deps in terminal**  
+***Select python intepreter for project***    
+```bash
+Ctrl+Shift+P > Python: Select Intepreter -> python 3.12.8('.venv':venv)
+```
+
+***Run dbt debug and dbt deps in terminal***    
 ```bash
 cd job_ads_group_project
 dbt debug
 dbt deps
 ```
 
-**Extensions**
+**Extensions**    
 För att se filerna i project_descriptions ladda ner:    
 Excel Viewer - av MESCIUS   
 vscode-pdf - av tomoki1207  
 
-## occupation_fields  
+## occupation_fields    
 ***occupation_field__label***       -    ***occupation_field__concept_id***     
 Hotell, restaurang, storhushåll     -    ScKy_FHB_7wT   
 Installation, drift, underhåll      -    yhCP_AqT_tns   
