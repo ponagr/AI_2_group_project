@@ -36,7 +36,14 @@ job_ads_group_project:
   target: dev
 ```
 
-**Extensions**  
+**Run dbt debug and dbt deps in terminal**  
+```bash
+cd job_ads_group_project
+dbt debug
+dbt deps
+```
+
+**Extensions**
 För att se filerna i project_descriptions ladda ner:    
 Excel Viewer - av MESCIUS   
 vscode-pdf - av tomoki1207  
