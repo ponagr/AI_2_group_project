@@ -4,3 +4,7 @@ sources:
     tables:
       - name: stg_ads
         identifier: job_ads
+      - name: stg_driving_license
+        identifier: job_ads__driving_license
+      - name: stg_must_skills
+        identifier: job_ads__must_have__skills
