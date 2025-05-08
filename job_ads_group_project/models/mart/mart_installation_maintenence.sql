@@ -27,7 +27,7 @@ select
     relevance,
     application_deadline,
     experience_required,
-    driver_licence,
+    driver_license,
     access_to_own_car
 from job_ads j
 left join {{ ref('dim_auxillary_attributes') }} a on a.auxillary_attributes_id = j.auxillary_attributes_id
