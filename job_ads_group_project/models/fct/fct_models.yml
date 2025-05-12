@@ -5,27 +5,22 @@ models:
       - name: occupation_id
         description: "Foreign Key for dim_occupation"
         tests:
-          - unique
           - not_null
       - name: employer_id
         description: "Foreign Key for dim_employer"
         tests:
-          - unique
           - not_null
       - name: auxillary_attributes_id
         description: "Foreign Key for dim_auxillary_attributes"
         tests:
-          - unique
           - not_null
       - name: job_details_id
         description: "Foreign Key for dim_job_details"
         tests:
-          - unique
           - not_null
       - name: job_requirements_id
         description: "Foreign Key for dim_requirements"
         tests:
-          - unique
           - not_null
       - name: vacancies
         description: "Contains values for vacancies amount"
