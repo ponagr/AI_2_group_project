@@ -28,7 +28,7 @@ models:
           - unique
           - not_null
       - name: vacancies
-        description: "Contains values for vacancies ammount"
+        description: "Contains values for vacancies amount"
         tests:
           - not_null
       - name: relevance
