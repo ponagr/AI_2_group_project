@@ -7,6 +7,18 @@ models:
         tests:
           - unique
           - not_null
+      - name: workplace_city
+        desctiption: "Contains what city the job is in, test for null values"
+        tests:
+          - not_null
+      - name: workplace_street_address
+        desctiption: "Contains what street the job is in, test for null values"
+        tests:
+          - not_null
+      - name: workplace_postcode
+        desctiption: "Contains what postcode the job is in, test for null values"
+        tests:
+          - not_null
   - name: dim_job_details
     description: "Contains job details information"
     columns:
@@ -14,6 +26,14 @@ models:
         description: "Primary Key"
         tests:
           - unique
+          - not_null
+      - name: salary_description
+        desctiption: "Contains information about salary, test for null values"
+        tests:
+          - not_null
+      - name: duration
+        desctiption: "Contains information about the work duration, test for null values"
+        tests:
           - not_null
   - name: dim_requirements
     description: "Contains detailed information about skills and drivers license required for a job ad"
