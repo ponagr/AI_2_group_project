@@ -1,0 +1,61 @@
+models:
+  - name: dim_employer
+    description: "Contains employer information"
+    columns:
+      - name: employer_id
+        description: "Primary Key"
+        tests:
+          - unique
+          - not_null
+      - name: workplace_city
+        description: "Contains what city the job is in, test for null values"
+        tests:
+          - not_null
+      - name: workplace_street_address
+        description: "Contains what street the job is in, test for null values"
+        tests:
+          - not_null
+      - name: workplace_postcode
+        description: "Contains what postcode the job is in, test for null values"
+        tests:
+          - not_null
+  - name: dim_job_details
+    description: "Contains job details information"
+    columns:
+      - name: job_details_id
+        description: "Primary Key"
+        tests:
+          - unique
+          - not_null
+      - name: salary_description
+        description: "Contains information about salary, test for null values"
+        tests:
+          - not_null
+      - name: duration
+        description: "Contains information about the work duration, test for null values"
+        tests:
+          - not_null
+  - name: dim_requirements
+    description: "Contains detailed information about skills and drivers license required for a job ad"
+    columns:
+      - name: job_requirements_id
+        description: "Primary Key"
+        tests:
+          - unique
+          - not_null
+  - name: dim_occupation
+    description: "Contains occupation information"
+    columns:
+      - name: occupation_id
+        description: "Primary Key"
+        tests:
+          - unique
+          - not_null
+  - name: dim_auxillary_attributes
+    description: "Contains true/false values if license, experience or own car is needed for job ad"
+    columns:
+      - name: auxillary_attributes_id
+        description: "Primary Key"
+        tests:
+          - unique
+          - not_null
