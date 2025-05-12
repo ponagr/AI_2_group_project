@@ -8,15 +8,15 @@ models:
           - unique
           - not_null
       - name: workplace_city
-        desctiption: "Contains what city the job is in, test for null values"
+        description: "Contains what city the job is in, test for null values"
         tests:
           - not_null
       - name: workplace_street_address
-        desctiption: "Contains what street the job is in, test for null values"
+        description: "Contains what street the job is in, test for null values"
         tests:
           - not_null
       - name: workplace_postcode
-        desctiption: "Contains what postcode the job is in, test for null values"
+        description: "Contains what postcode the job is in, test for null values"
         tests:
           - not_null
   - name: dim_job_details
