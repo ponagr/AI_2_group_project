@@ -1,4 +1,4 @@
-with job_ads as (select * from {{ ref('fct_job_ads') }})
+with job_ads as (select * from {{ ref('mart_full_job_ads') }})
 
 
 select 
@@ -30,9 +30,4 @@ select
     driver_license,
     access_to_own_car
 from job_ads j
-left join {{ ref('dim_auxillary_attributes') }} a on a.auxillary_attributes_id = j.auxillary_attributes_id
-left join {{ ref('dim_occupation') }} o on o.occupation_id = j.occupation_id
-left join {{ ref('dim_job_details') }} jd on jd.job_details_id = j.job_details_id
-left join {{ ref('dim_employer') }} e on e.employer_id = j.employer_id
-left join {{ ref('dim_requirements') }} r on r.job_requirements_id = j.job_requirements_id
 where occupation_field = 'Hotell, restaurang, storhushåll'
