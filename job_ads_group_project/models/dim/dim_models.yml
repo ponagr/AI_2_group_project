@@ -28,11 +28,11 @@ models:
           - unique
           - not_null
       - name: salary_description
-        desctiption: "Contains information about salary, test for null values"
+        description: "Contains information about salary, test for null values"
         tests:
           - not_null
       - name: duration
-        desctiption: "Contains information about the work duration, test for null values"
+        description: "Contains information about the work duration, test for null values"
         tests:
           - not_null
   - name: dim_requirements
