@@ -50,6 +50,29 @@ def total_vacancies_by_date():
     fig = px.bar(sorted_df, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies":"Vacancies"})
     st.plotly_chart(fig)
 
+def total_of_ads():
+    st.title("Total number of ads")
+    query = "SELECT COUNT(*) AS total_ads, publication_date, occupation_group FROM mart.mart_installation_maintenence GROUP BY publication_date, occupation_group"
+    df = load_data(query)
+    
+    st.subheader(f"Total number of ads for 'occupation_field': {df['total_ads'].sum()}")
+    
+    min_date = df["publication_date"].min().date()
+    max_date = df["publication_date"].max().date()
+    
+    start_date = st.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date)
+    end_date = st.date_input("End date", min_value=start_date, max_value=max_date, value=max_date)
+    
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
+    
+    filtered_date_df = df[(df["publication_date"] >= start_date) & (df["publication_date"] <= end_date)]
+    grouped_df = filtered_date_df.groupby("occupation_group").size().reset_index(name="total_ads")
+    sorted_df = grouped_df.sort_values(by="total_ads", ascending=False)
+    
+    fig = px.bar(sorted_df, x="occupation_group", y="total_ads", labels={"occupation_group": "Occupation group", "total_ads":"Total number of ads"})
+    st.plotly_chart(fig)
+    
 if __name__ == "__main__":
     #top_employer_occupation_group()
     total_vacancies_by_date()
