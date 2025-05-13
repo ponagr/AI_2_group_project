@@ -1,4 +1,3 @@
-
 with job_details as (
     select * from {{ ref('src_job_details') }}
 )
