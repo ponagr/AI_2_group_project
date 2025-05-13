@@ -1,17 +1,24 @@
--- models/src/src_job_details.sql
 
-with stg_job_details as (
-    select * from {{ source('job_ads', 'stg_job_details') }}
+
+with stg_ads as (
+    select * from {{ source('job_ads', 'stg_ads') }}
 )
 
 select
-    job_details_id,
+    id as job_details_id,
     headline,
-    description,
-    description_html_formatted,
-    employment_type,
-    duration,
-    salary_type,
-    scope_of_work_min,
-    scope_of_work_max
-from stg_job_details
+    description__text as description,
+    description__text_formatted as description_html_formatted,
+    employment_type__label as employment_type,
+    employment_type__concept_id as employment_type_concept_id,
+    duration__label as duration,
+    salary_description,
+    application_deadline,
+    publication_date,
+    number_of_vacancies as vacancies,
+    description__conditions as conditions,
+    application_details__url as application_url,
+    application_details__information as application_information
+from stg_ads
+where headline is not null
+
