@@ -1,5 +1,4 @@
--- models/dim/dim_job_details.sql
--- dim_job_details.sql
+
 with job_details as (
     select * from {{ ref('src_job_details') }}
 )
