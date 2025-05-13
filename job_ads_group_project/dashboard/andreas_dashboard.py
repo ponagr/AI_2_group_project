@@ -22,7 +22,34 @@ def top_employer_occupation_group():
     
     fig = px.bar(sorted_df.head(top_employer), x="employer_name", y="vacancies", labels={"employer_name":"Employer name"})
     st.plotly_chart(fig)
+
+def total_vacancies_by_date():
+    st.title("Total vacancies by date")
+    query = "SELECT publication_date, vacancies, occupation_group FROM mart.mart_installation_maintenence"
+    df = load_data(query)
+    
+    #  Set min and max date for the date input to the min and max date from the data
+    min_date = df["publication_date"].min().date()
+    max_date = df["publication_date"].max().date()
+    
+    # Create a date input for the start and end date
+    start_date = st.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date)
+    end_date = st.date_input("End date", min_value=min_date, max_value=max_date, value=max_date)
+    
+    # Convert the start and end date to datetime
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
+    
+    # Filter the dataframe based on the selected date range
+    filtered_date_df = df[(df["publication_date"] >= start_date) & (df["publication_date"] <= end_date)]
+    
+    # Group and sort the dataframe by occupation group and the sum of vacancies
+    grouped_df = filtered_date_df.groupby("occupation_group", as_index=False)["vacancies"].sum()
+    sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
+    
+    fig = px.bar(sorted_df, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies":"Vacancies"})
     st.plotly_chart(fig)
 
 if __name__ == "__main__":
-    top_employer_occupation_group()
+    #top_employer_occupation_group()
+    total_vacancies_by_date()
