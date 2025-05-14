@@ -1,7 +1,7 @@
 
 with dim_job_details as (
     select * from {{ ref('src_job_details') }}
-)
+)   -- Build the dimension table for job details based on the source model
 
 select
     {{ dbt_utils.generate_surrogate_key(['job_details_id']) }} as job_details_id,
