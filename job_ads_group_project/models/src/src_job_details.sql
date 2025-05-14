@@ -2,7 +2,7 @@
 
 with stg_ads as (
     select * from {{ source('job_ads', 'stg_ads') }}
-)
+)  -- loading raw job details data from the source table
 
 select
     id as job_details_id,
