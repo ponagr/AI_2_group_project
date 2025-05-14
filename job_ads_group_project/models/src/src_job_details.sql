@@ -4,6 +4,9 @@ with stg_ads as (
     select * from {{ source('job_ads', 'stg_ads') }}
 )  -- loading raw job details data from the source table
 
+
+-- Select relevant fields for the src_job_details model
+-- Renaming columns to match dimensional model naming conventions
 select
     id as job_details_id,
     headline,
