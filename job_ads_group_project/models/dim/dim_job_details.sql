@@ -4,8 +4,8 @@ with dim_job_details as (
 )   -- Build the dimension table for job details based on the source model
 
 select
-    {{ dbt_utils.generate_surrogate_key(['job_details_id']) }} as job_details_id,
-    any_value(headline) as headline,
+    {{ dbt_utils.generate_surrogate_key(['job_details_id']) }} as job_details_id,    -- Generating a surrogate key for dimensional modeling  , ensures a unique, consistent primary key for each row in the dimension table
+    any_value(headline) as headline,      
     any_value(description) as description,
     any_value(description_html_formatted) as description_html_formatted,
     any_value(employment_type) as employment_type,
