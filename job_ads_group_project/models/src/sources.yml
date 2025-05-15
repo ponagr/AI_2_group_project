@@ -8,5 +8,4 @@ sources:
         identifier: job_ads__driving_license
       - name: stg_must_skills
         identifier: job_ads__must_have__skills
-      - name: stg_job_details
-        identifier: job_ads__job_details
+      
