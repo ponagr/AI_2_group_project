@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: dim_job_details
+    description: "Dimension table containing job ads details cleaned and enriched for analysis."
+    columns:
+      - name: job_details_id
+        description: "Surrogate key and unique identifier for each job ad."
+        tests:
+          - not_null
+          - unique
+
+      - name: headline
+        description: "Title of the job advertisement."
+
+      - name: description
+        description: "Main text description of the job."
+
+      - name: description_html_formatted
+        description: "HTML-formatted job description for display purposes."
+
+      - name: employment_type
+        description: "Type of employment, e.g., 'Heltid' (full-time) or 'Deltid' (part-time)."
+
+      - name: employment_type_concept_id
+        description: "Internal concept ID for employment type categorization."
+
+      - name: duration
+        description: "Duration of the job contract."
+
+      - name: salary_description
+        description: "Text describing salary conditions."
+
+      - name: application_deadline
+        description: "Final date for applications."
+
+      - name: publication_date
+        description: "Date when the job ad was published."
+
+      - name: vacancies
+        description: "Number of vacancies offered."
+
+      - name: conditions
+        description: "Job specific working conditions."
+
+      - name: application_url
+        description: "Link to the application form."
+
+      - name: application_information
+        description: "Additional information about the application process."
