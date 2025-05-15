@@ -36,10 +36,6 @@ def total_vacancies_by_date():
     start_date = st.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date)
     end_date = st.date_input("End date", min_value=min_date, max_value=max_date, value=max_date)
     
-    # Convert the start and end date to datetime
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-    
     # Filter the dataframe based on the selected date range
     filtered_date_df = df[(df["publication_date"] >= start_date) & (df["publication_date"] <= end_date)]
     
@@ -57,22 +53,29 @@ def total_of_ads():
     
     st.subheader(f"Total number of ads for 'occupation_field': {df['total_ads'].sum()}")
     
-    min_date = df["publication_date"].min().date()
-    max_date = df["publication_date"].max().date()
-    
-    start_date = st.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date)
-    end_date = st.date_input("End date", min_value=start_date, max_value=max_date, value=max_date)
-    
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-    
-    filtered_date_df = df[(df["publication_date"] >= start_date) & (df["publication_date"] <= end_date)]
+    filtered_date_df = get_date(df)
     grouped_df = filtered_date_df.groupby("occupation_group").size().reset_index(name="total_ads")
     sorted_df = grouped_df.sort_values(by="total_ads", ascending=False)
     
     fig = px.bar(sorted_df, x="occupation_group", y="total_ads", labels={"occupation_group": "Occupation group", "total_ads":"Total number of ads"})
     st.plotly_chart(fig)
     
+def layout():
+    pass
+
+def sidemenu():
+    pass
+
+def get_date(df):
+    min_date = df["publication_date"].min().date()
+    max_date = df["publication_date"].max().date()
+    
+    start_date = pd.to_datetime(st.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date))
+    end_date = pd.to_datetime(st.date_input("End date", min_value=start_date, max_value=max_date, value=max_date))
+    
+    return df[(df["publication_date"] >= start_date) & (df["publication_date"] <= end_date)]
+
 if __name__ == "__main__":
     #top_employer_occupation_group()
-    total_vacancies_by_date()
+    #total_vacancies_by_date()
+    total_of_ads()
