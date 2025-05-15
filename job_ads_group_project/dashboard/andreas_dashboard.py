@@ -61,9 +61,29 @@ def total_of_ads():
     st.plotly_chart(fig)
     
 def layout():
-    pass
+    st.title("Test")
+    expander = st.expander("Filter")
+    query = "SELECT * FROM mart.mart_full_job_ads"
+    df = load_data(query)
+    
+    with expander:
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            occupation = st.selectbox("Filter after occupation", ["All"] + sorted(list(df["occupation_group"].unique())))
+            if occupation != "All":
+                df = df[df["occupation_group"] == occupation]
+        
+        with col2:
+            city = st.selectbox("Filter after city", ["All"] + sorted(list(df["workplace_city"].unique())))
+            if city != "All":
+                df = df[df["workplace_city"] == city]
 
-def sidemenu():
+        with col3:
+            employer = st.selectbox("Filter after employer", ["All"] + sorted(list(df["employer_workplace"].unique())))
+            if employer != "All":
+                df = df[df["employer_workplace"] == employer]
+        st.divider()
+        st.radio("Requires drivers license:", ["Yes","No"])
     pass
 
 def get_date(df):
@@ -76,6 +96,4 @@ def get_date(df):
     return df[(df["publication_date"] >= start_date) & (df["publication_date"] <= end_date)]
 
 if __name__ == "__main__":
-    #top_employer_occupation_group()
-    #total_vacancies_by_date()
-    total_of_ads()
+    layout()
