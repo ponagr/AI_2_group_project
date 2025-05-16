@@ -71,7 +71,11 @@ models:
         tests:
           - not_null
       - name: working_hours_type
-        description: "employment type(part-time, full-time), test for null values"
+        description: "working hours type(part-time, full-time), test for null values"
+        tests:
+          - not_null
+      - name: employment_type
+        description: "employment type(sommarjobb, vid behov), test for null values"
         tests:
           - not_null
 
