@@ -29,7 +29,8 @@ select
     application_deadline,
     experience_required,
     driver_license,
-    access_to_own_car
+    access_to_own_car,
+    publication_date
 from job_ads j
 left join {{ ref('dim_auxillary_attributes') }} a on a.auxillary_attributes_id = j.auxillary_attributes_id
 left join {{ ref('dim_occupation') }} o on o.occupation_id = j.occupation_id
