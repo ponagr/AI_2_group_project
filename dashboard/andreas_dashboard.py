@@ -83,7 +83,11 @@ def layout():
             if employer != "All":
                 df = df[df["employer_workplace"] == employer]
         st.divider()
-        st.radio("Requires drivers license:", ["Yes","No"])
+        drivers_license = st.pills("Requires drivers license", ["Yes", "No"], selection_mode="single")
+    if drivers_license == None:
+        st.write("Alla")
+        
+        
     pass
 
 def get_date(df):
