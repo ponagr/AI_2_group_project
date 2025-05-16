@@ -1,0 +1,5 @@
+models:
+  - name: mart_full_job_ads
+    description: "full joined job ads from fct and dim models, used for creating more mart models"
+    tests:
+      - mart_row_count_match

@@ -30,3 +30,4 @@ sources:
             - unique
             - not_null
         identifier: job_ads__must_have__skills
+        
