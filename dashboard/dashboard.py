@@ -288,6 +288,7 @@ def desc_tab(df):
         if headline == "Välj jobbannons":
             st.info("Välj en jobbannons för beskrivning")
         else:
+            st.dataframe(job_ad[["Headline", "Employer Name", "Employer Workplace", "Employer Organization Number", "Workplace City", "Duration", "Working Hours Type"]])
             st.info(job_ad[job_ad["Description"].notnull()].iloc[0]["Description"])
     with cols[1]:
         with st.expander("Översikt (filtrerad)", expanded=True):
