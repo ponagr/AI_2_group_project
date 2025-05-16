@@ -28,7 +28,7 @@ select
     application_deadline,
     experience_required,
     driver_license,
-    access_to_own_car
+    access_to_own_car,
     publication_date
 from job_ads j
 where occupation_field = 'Hotell, restaurang, storhushåll'

@@ -34,3 +34,7 @@ models:
         description: "Contains information about last application date"
         tests:
           - not_null
+      - name: publication_date
+        description: "Contains job ad publication date"
+        tests:
+          - not_null
