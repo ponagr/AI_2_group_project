@@ -5,7 +5,7 @@ from utils import load_data
 
 def top_employer_occupation_group():
     st.title("Top employers by occupation group")
-    query = "SELECT employer_name, vacancies, occupation_group FROM mart.mart_installation_maintenence"
+    query = "SELECT employer_workplace, vacancies, occupation_group FROM mart.mart_installation_maintenence"
     df = load_data(query)
     
     # Create a selectbox for the occupation group and filter the dataframe based on the selection
@@ -17,10 +17,10 @@ def top_employer_occupation_group():
     top_employer = st.slider("Top N employers", 1, 10, 5)
     
     # Group and sort the dataframe by empolyer name and the sum of vacancies
-    grouped_df = filtered_df.groupby("employer_name", as_index=False)["vacancies"].sum()
+    grouped_df = filtered_df.groupby("employer_workplace", as_index=False)["vacancies"].sum()
     sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
     
-    fig = px.bar(sorted_df.head(top_employer), x="employer_name", y="vacancies", labels={"employer_name":"Employer name"})
+    fig = px.bar(sorted_df.head(top_employer), x="employer_workplace", y="vacancies", labels={"employer_workplace":"Employer name"})
     st.plotly_chart(fig)
 
 def total_vacancies_by_date():
