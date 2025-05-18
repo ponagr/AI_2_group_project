@@ -152,6 +152,16 @@ def group_and_sort(df, group_col, agg_col, agg="sum"):
     
     return sorted_df
 
+def vacancies_over_time(df):
+    st.title("Vacancies over time")
+    
+    # Groeping the data by week and summing the vacancies
+    grouped_df = df.groupby(pd.Grouper(key="publication_date", freq="W"))["vacancies"].sum().reset_index()
+    # Sorting the data by date to be sure the data is in the right order
+    sorted_df = grouped_df.sort_values(by="publication_date")
+    fig = px.line(sorted_df, x="publication_date", y="vacancies", labels={"publication_date": "Date", "vacancies": "Vacancies"})
+    st.plotly_chart(fig)
+
 def vacancy_details(df):
     st.title("Vacancy details")
     
