@@ -98,6 +98,18 @@ def filter_layout(df):
         
     return filtered_df
 
+def sideboard_menu():
+    st.sidebar.title("Menu")
+    
+    pages = st.sidebar.radio("Select a page", options=[
+        "Overview",
+        "Analytics by occupation group",
+        "Analytics by city",
+        "Analytics by date",
+        "Details" # Ha med?
+    ])
+    
+    return pages
 if __name__ == "__main__":
     query = "SELECT * FROM mart.mart_full_job_ads"
     df = load_data(query)
