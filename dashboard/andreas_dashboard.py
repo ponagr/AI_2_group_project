@@ -117,6 +117,13 @@ def vacancies_by_occupation(df):
     grouped_df = df.groupby("occupation_group")["vacancies"].sum().reset_index()
     fig = px.bar(grouped_df, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies": "Vacancies"})
     st.plotly_chart(fig)
+
+def vacancies_by_city(df):
+    st.title("Vacancies by city")
+    
+    grouped_df = df.groupby("workplace_city")["vacancies"].sum().reset_index()
+    fig = px.bar(grouped_df, x="workplace_city", y="vacancies", labels={"workplace_city": "City", "vacancies": "Vacancies"})
+    st.plotly_chart(fig)
 if __name__ == "__main__":
     query = "SELECT * FROM mart.mart_full_job_ads"
     df = load_data(query)
