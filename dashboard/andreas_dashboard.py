@@ -8,10 +8,13 @@ def top_employer_occupation_group():
     query = "SELECT employer_workplace, vacancies, occupation_group FROM mart.mart_installation_maintenence"
     df = load_data(query)
     
+
     # Create a selectbox for the occupation group and filter the dataframe based on the selection
     occupation_group = st.selectbox("Occupation group", ["All"] + list(df["occupation_group"].unique()))
     if occupation_group != "All":
         filtered_df = df[df["occupation_group"] == occupation_group]
+    else:
+        filtered_df = df
     
     # Create a slider for top N employwers to display
     top_employer = st.slider("Top N employers", 1, 10, 5)
@@ -157,9 +160,7 @@ def vacancies_over_time(df):
     
     # Groeping the data by week and summing the vacancies
     grouped_df = df.groupby(pd.Grouper(key="publication_date", freq="W"))["vacancies"].sum().reset_index()
-    # Sorting the data by date to be sure the data is in the right order
-    sorted_df = grouped_df.sort_values(by="publication_date")
-    fig = px.line(sorted_df, x="publication_date", y="vacancies", labels={"publication_date": "Date", "vacancies": "Vacancies"})
+    fig = px.line(grouped_df, x="publication_date", y="vacancies", labels={"publication_date": "Date", "vacancies": "Vacancies"})
     st.plotly_chart(fig)
 
 def vacancy_details(df):
@@ -182,8 +183,29 @@ def vacancy_details(df):
             st.metric("Avg Vacancies/Occupation", avg_vacancies_per_occupation)
         with col1:
             st.metric("Total Occupations", df["occupation_group"].nunique())
+    
+    
+# KPIs
+
+# Total Vacancies
+# Most Vacant Occupation
+# Highest Vacancy City
+# Average Vacancies per Occupation
+# Total Number of Occupations
+
+# Visualizations
+
+# Bar Chart: Vacancies by Occupation
+# Bar Chart: Vacancies by City
+# Bar Chart. Vacancies by Date
+# Bar Chart: Top Employers by Occupation group
+# Bar Chart: Total number of ads by occupation group
+# Line Chart: Vacancies Over Time
+# Table: Vacancy Details
+# Occupation Distribution Pie Chart
+# Stacked Bar Chart: Vacancies by Occupation and City
+
 if __name__ == "__main__":
-    query = "SELECT * FROM mart.mart_full_job_ads"
+    query = "SELECT * FROM mart.mart_installation_maintenence"
     df = load_data(query)
-    filtered_df = filter_layout(df)
-    total_of_ads(filtered_df)
+    vacancies_over_time(df)
