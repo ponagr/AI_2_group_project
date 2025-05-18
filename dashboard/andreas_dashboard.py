@@ -151,6 +151,27 @@ def group_and_sort(df, group_col, agg_col, agg="sum"):
     sorted_df = grouped_df.sort_values(by=agg_col, ascending=False)
     
     return sorted_df
+
+def vacancy_details(df):
+    st.title("Vacancy details")
+    
+    box = st.container(border=True)
+    
+    with box:
+        col1, col2= st.columns(2)
+        with col1:
+            st.metric("Total Vacancies", int(df["vacancies"].sum()))
+        with col2:
+            most_vacant_occupation = df.groupby("occupation_group")["vacancies"].sum().idxmax()
+            st.metric("Most Vacant Occupation", most_vacant_occupation)
+        with col2:
+            highest_vacancy_city = df.groupby("workplace_city")["vacancies"].sum().idxmax()
+            st.metric("Highest Vacancy City", highest_vacancy_city)
+        with col1:
+            avg_vacancies_per_occupation = int(df.groupby("occupation_group")["vacancies"].sum().mean())
+            st.metric("Avg Vacancies/Occupation", avg_vacancies_per_occupation)
+        with col1:
+            st.metric("Total Occupations", df["occupation_group"].nunique())
 if __name__ == "__main__":
     query = "SELECT * FROM mart.mart_full_job_ads"
     df = load_data(query)
