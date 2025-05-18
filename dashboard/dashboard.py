@@ -57,13 +57,15 @@ def filter_tab(df):
 
         # Körkort & erfarenhet
         # Lägga till checkbox för inget körkort och ingen erfarenhet där man filtrerar efter == False istället
-        top_col = st.columns(2)
-        bottom_col = st.columns(2)
+        top_col = st.columns(3)
+        bottom_col = st.columns(3)
         
         with top_col[0]:
             lic = st.selectbox("Kräver körkort", ["Visa Alla", "Ja", "Nej"])
         with top_col[1]:
             exp = st.selectbox("Kräver erfarenhet", ["Visa Alla", "Ja", "Nej"])
+        with top_col[2]:
+            work_time = st.selectbox("Heltid/Deltid", ["Visa Alla", "Heltid", "Deltid"])
         if lic == "Ja":
             df = df[df["Driver License"] == True]
             with bottom_col[0]:
@@ -86,6 +88,8 @@ def filter_tab(df):
         if exp == "Nej":
             df = df[df["Experience Required"] == False]
             
+        if work_time != "Visa Alla":
+            df = df[df["Working Hours Type"] == work_time]
     with cols[1]:        
         with st.expander("Översikt (filtrerad)", expanded=True):
             overview(df)
