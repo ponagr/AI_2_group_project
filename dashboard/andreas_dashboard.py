@@ -114,34 +114,43 @@ def sideboard_menu():
 def vacancies_by_occupation(df):
     st.title("Vacancies by occupation")
     
-    grouped_df = df.groupby("occupation_group")["vacancies"].sum().reset_index()
-    sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
-    fig = px.bar(sorted_df, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies": "Vacancies"})
+    data_chart = group_and_sort(df, "occupation_group", "vacancies")
+    fig = px.bar(data_chart, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies": "Vacancies"})
     st.plotly_chart(fig)
 
 def vacancies_by_city(df):
     st.title("Vacancies by city")
     
-    grouped_df = df.groupby("workplace_city")["vacancies"].sum().reset_index()
-    sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
-    fig = px.bar(sorted_df, x="workplace_city", y="vacancies", labels={"workplace_city": "City", "vacancies": "Vacancies"})
+    data_chart = group_and_sort(df, "workplace_city", "vacancies")
+    fig = px.bar(data_chart, x="workplace_city", y="vacancies", labels={"workplace_city": "City", "vacancies": "Vacancies"})
     st.plotly_chart(fig)
 
 def vacancies_by_date(df):
     st.title("Vacancies by date")
     
-    grouped_df = df.groupby("publication_date")["vacancies"].sum().reset_index()
-    sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
-    fig = px.bar(sorted_df, x="publication_date", y="vacancies", labels={"publication_date": "Date", "vacancies": "Vacancies"})
+    data_chart = group_and_sort(df, "publication_date", "vacancies")
+    fig = px.bar(data_chart, x="publication_date", y="vacancies", labels={"publication_date": "Date", "vacancies": "Vacancies"})
     st.plotly_chart(fig)
 
 def total_number_of_ads_by_occupation_group(df):
     st.title("Total number of ads by occupation group")
     
-    grouped_df = df.groupby("occupation_group")["vacancies"].count().reset_index()
-    sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
-    fig = px.bar(sorted_df, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies": "Total number of ads"})
+    data_chart = group_and_sort(df, "occupation_group", "vacancies", agg="count")
+    fig = px.bar(data_chart, x="occupation_group", y="vacancies", labels={"occupation_group": "Occupation group", "vacancies": "Total number of ads"})
     st.plotly_chart(fig)
+
+def group_and_sort(df, group_col, agg_col, agg="sum"):
+    # Grouping the data by the group_col and aggregating the agg_col
+    if agg == "sum":
+        grouped_df = df.groupby(group_col)[agg_col].sum().reset_index()
+    elif agg == "count":
+        grouped_df = df.groupby(group_col)[agg_col].count().reset_index()
+    else:
+        raise ValueError("agg must be either sum or count")
+    
+    sorted_df = grouped_df.sort_values(by=agg_col, ascending=False)
+    
+    return sorted_df
 if __name__ == "__main__":
     query = "SELECT * FROM mart.mart_full_job_ads"
     df = load_data(query)
