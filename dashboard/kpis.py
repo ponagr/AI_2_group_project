@@ -50,9 +50,9 @@ def overview(df):
     metrics(values, labels, 2)
     
     # Metric för andel i %
-    antal_heltid = (df["Working Hours Type"] == "Heltid").sum()
-    antal_korkort = (df["Driver License"] == True).sum()
-    antal_experience = (df["Experience Required"] == True).sum()
+    antal_heltid = df[df["Working Hours Type"] == "Heltid"]["Vacancies"].sum()
+    antal_korkort = df[df["Driver License"] == True]["Vacancies"].sum()
+    antal_experience = df[df["Experience Required"] == True]["Vacancies"].sum()
 
     heltid_andel = round(antal_heltid / total_jobs * 100, 1)
     korkort_andel = round(antal_korkort / total_jobs * 100, 1)
