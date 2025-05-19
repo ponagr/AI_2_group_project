@@ -34,65 +34,75 @@ def filter_tab(df):
     # Overview
     
     # 2 tabs för fönstret, visa pie chart och metrics till höger om filtreringen
-    cols = st.columns(2)
+    # cols = st.columns(2)
     # Filtrering
-    with cols[0]:
-        select_cols = st.columns(3)
+    # with cols[0]:
+    with st.expander("Filter"):
+        cols = st.columns(2)
         
-        with select_cols[0]:
-            # Yrkesområde
-            group = st.selectbox("Välj yrkesområde:", ["Alla"] + order_vacancies(df,"Occupation Group"))
-            if group != "Alla":
-                df = df[df["Occupation Group"] == group]
-        with select_cols[1]:
-            # Stad
-            cities = st.multiselect("Filtrera efter stad(er):", order_vacancies(df,"Workplace City"))
-            if cities:
-                df = df[df["Workplace City"].isin(cities)]
-        with select_cols[2]:
-            # Arbetsgivare
-            employers = st.multiselect("Filtrera efter arbetsgivare:", order_vacancies(df,"Employer Name"))
-            if employers:
-                df = df[df["Employer Name"].isin(employers)]
+        # with select_cols[0]:
+        
+        # Yrkesområde
+        group = cols[0].selectbox("Välj yrkesområde:", ["Alla"] + order_vacancies(df,"Occupation Group"))
+        if group != "Alla":
+            df = df[df["Occupation Group"] == group]
+    # with select_cols[1]:
+        # Stad
+        cities = cols[0].multiselect("Filtrera efter stad(er):", order_vacancies(df,"Workplace City"))
+        if cities:
+            df = df[df["Workplace City"].isin(cities)]
+    # with select_cols[2]:
+        # Arbetsgivare
+        employers = cols[0].multiselect("Filtrera efter arbetsgivare:", order_vacancies(df,"Employer Name"))
+        if employers:
+            df = df[df["Employer Name"].isin(employers)]
 
+        with cols[1]:
+            col1, col2 = st.columns(2)
+
+            min_date = df["Publication Date"].min().date()
+            max_date = df["Publication Date"].max().date()
+
+            start_date = pd.to_datetime(col1.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date))
+            end_date = pd.to_datetime(col2.date_input("End date", min_value=start_date, max_value=max_date, value=max_date))
         # Körkort & erfarenhet
         # Lägga till checkbox för inget körkort och ingen erfarenhet där man filtrerar efter == False istället
-        top_col = st.columns(3)
-        bottom_col = st.columns(3)
+        # top_col = st.columns(3)
+        # bottom_col = st.columns(3)
         
-        with top_col[0]:
-            lic = st.selectbox("Kräver körkort", ["Visa Alla", "Ja", "Nej"])
-        with top_col[1]:
-            exp = st.selectbox("Kräver erfarenhet", ["Visa Alla", "Ja", "Nej"])
-        with top_col[2]:
-            work_time = st.selectbox("Heltid/Deltid", ["Visa Alla", "Heltid", "Deltid"])
-        if lic == "Ja":
-            df = df[df["Driver License"] == True]
-            with bottom_col[0]:
-                # Splitta på listor och skriv ut unika värden till selectbox
-                license = st.multiselect("Filtrera efter körkortstyp:", split_unique_cols(df,"Required License"))
-            if license:   
-                # Hitta matchningar, där värdet från select finns nånstans i kolumnens värde separerat av ','
-                df = df[df["Required License"].fillna("").apply(lambda x: any(lic in [s.strip() for s in x.split(',')] for lic in license))]
-        if lic == "Nej":
-            df = df[df["Driver License"] == False]
-            
-        if exp == "Ja":
-            df = df[df["Experience Required"] == True]
-            with bottom_col[1]:
-                # Splitta på listor och skriv ut unika värden till selectbox
-                experience = st.multiselect("Filtrera efter skills:", split_unique_cols(df,"Required Skills"))
-            if experience:
-                # Hitta matchningar, där värdet från select finns nånstans i kolumnens värde separerat av ','
-                df = df[df["Required Skills"].fillna("").apply(lambda x: any(exp in [e.strip() for e in x.split(',')] for exp in experience))]
-        if exp == "Nej":
-            df = df[df["Experience Required"] == False]
-            
+        # with top_col[0].selectbox:
+            lic = col1.selectbox("Kräver körkort", ["Visa Alla", "Ja", "Nej"])
+        # with top_col[1]:
+            exp = col2.selectbox("Kräver erfarenhet", ["Visa Alla", "Ja", "Nej"])
+            if lic == "Ja":
+                df = df[df["Driver License"] == True]
+                # with bottom_col[0]:
+                    # Splitta på listor och skriv ut unika värden till selectbox
+                license = col1.multiselect("Filtrera efter körkortstyp:", split_unique_cols(df,"Required License"))
+                if license:   
+                    # Hitta matchningar, där värdet från select finns nånstans i kolumnens värde separerat av ','
+                    df = df[df["Required License"].fillna("").apply(lambda x: any(lic in [s.strip() for s in x.split(',')] for lic in license))]
+                if lic == "Nej":
+                    df = df[df["Driver License"] == False]
+                if exp == "Ja":
+                    df = df[df["Experience Required"] == True]
+                    with col2:
+                        # Splitta på listor och skriv ut unika värden till selectbox
+                        experience = st.multiselect("Filtrera efter skills:", split_unique_cols(df,"Required Skills"))
+                    if experience:
+                        # Hitta matchningar, där värdet från select finns nånstans i kolumnens värde separerat av ','
+                        df = df[df["Required Skills"].fillna("").apply(lambda x: any(exp in [e.strip() for e in x.split(',')] for exp in experience))]
+                if exp == "Nej":
+                    df = df[df["Experience Required"] == False]
+                    
+        # with top_col[2]:
+        work_time = cols[0].pills("Heltid/Deltid", ["Visa Alla", "Heltid", "Deltid"], selection_mode='single', default="Visa Alla")
         if work_time != "Visa Alla":
             df = df[df["Working Hours Type"] == work_time]
-    with cols[1]:        
-        with st.expander("Översikt (filtrerad)", expanded=True):
-            overview(df)
+        
+    # with cols[1]:        
+        # with st.expander("Översikt (filtrerad)", expanded=True):
+    # overview(df)
     return df
 
 
@@ -155,23 +165,37 @@ def desc_tab(df):
 
 def layout():
     # Vyer för olika marts
+    
     page = {
         "Alla jobb": "mart.mart_full_job_ads", 
         "Transport, Distribution, Lager": "mart.mart_transport_distrubution_layer",
         "Installation, Drift, Underhåll": "mart.mart_installation_maintenence",
         "Hotell, Restaurang, Storhushåll": "mart.mart_hotel_restaurant"
     }
+    
+    pages = {
+        "Overview": overview,
+        "Analytics by occupation group": '2',
+        "Analytics by city": '3',
+        "Analytics by date": '4',
+        "Details": '5' # Ha med?
+    }
+    
 
     # Hämta df baserat på val av vy
-    view_choice = st.sidebar.radio("Välj vy", list(page.keys()))
+    view_choice = st.sidebar.selectbox("Välj vy", list(page.keys()))
+    page_choice = st.sidebar.radio("Select a page", list(pages.keys()))
+    # st.sidebar(overview(df))
     df = get_dataframe(page[view_choice])
-
+    
     st.markdown(f"# Jobbdata för: {view_choice}")
-    with st.expander("Översikt (alla jobb i vyn)", expanded=True):
-        overview(df)   
+    # with st.expander("Översikt (alla jobb i vyn)", expanded=True):
+        # overview(df)
+    df = filter_tab(df)
+    with st.container(border=True):
+        overview(df)
     
     tabs_dict = {
-        "Filtrering": filter_tab,
         "Plots/Metrics": plot_tab,
         "Job Description/LLM": desc_tab
     }
