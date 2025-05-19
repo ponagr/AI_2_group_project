@@ -27,6 +27,11 @@ def metrics(kpis,labels,col_amount):
         with col: 
             st.metric(label=label, value=kpi)
 
+def sidebar_metrics(kpis,labels,col_amount):
+    cols = st.sidebar.columns(col_amount)
+    for col, label, kpi in zip(cols, labels, kpis):
+        with col: 
+            st.sidebar.metric(label=label, value=kpi)
 # Enkel filtrering av df vid selectbox val
 def filter_df(df, column, statement):
     return df[df[column] == statement]
@@ -67,3 +72,39 @@ def overview(df):
     values1 = [unique_groups, unique_employers, unique_occupations, unique_cities]
     labels1 = ["Yrkesgrupper","Arbetsgivare","Yrken","Orter"]
     metrics(values1, labels1, 4)
+    
+def sidebar_overview(df):
+    # Metric för totalt antal
+    total_ads = len(df)
+    total_jobs = df["Vacancies"].sum()
+    unique_groups = df["Occupation Group"].nunique()
+    unique_cities = df["Workplace City"].nunique()
+    unique_occupations = df["Occupation"].nunique()
+    unique_employers = df["Employer Name"].nunique()
+    
+    st.sidebar.markdown("### Totalt antal")
+    values = [total_ads, total_jobs]
+    labels = ["Job ads","Lediga jobb"]
+    # st.sidebar.columns()
+    # st.sidebar.metric()
+    # sidebar_metrics(values, labels, 2)
+    
+    
+    # Metric för andel i %
+    antal_heltid = df[df["Working Hours Type"] == "Heltid"]["Vacancies"].sum()
+    antal_korkort = df[df["Driver License"] == True]["Vacancies"].sum()
+    antal_experience = df[df["Experience Required"] == True]["Vacancies"].sum()
+
+    heltid_andel = round(antal_heltid / total_jobs * 100, 1)
+    korkort_andel = round(antal_korkort / total_jobs * 100, 1)
+    experience_andel = round(antal_experience / total_jobs * 100, 1)
+    
+    st.markdown("### Krav för jobb")
+    labels2 = ["Heltid", "Körkort", "Tidigare Erfarenhet"]
+    values2 = [f"{heltid_andel}%", f"{korkort_andel} %", f"{experience_andel} %"]
+    sidebar_metrics(values2, labels2, 3)
+
+    st.markdown("### Unikt antal")
+    values1 = [unique_groups, unique_employers, unique_occupations, unique_cities]
+    labels1 = ["Yrkesgrupper","Arbetsgivare","Yrken","Orter"]
+    sidebar_metrics(values1, labels1, 4)

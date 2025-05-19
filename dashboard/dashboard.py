@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from plots import barplot_df
 from read_data import get_dataframe
-from kpis import show_metrics, filter_df, group_by, overview
+from kpis import show_metrics, filter_df, group_by, overview, sidebar_overview
 
 
 # Ta bort redan använda kolumner för nästa selectbox
@@ -37,6 +37,10 @@ def filter_tab(df):
     # cols = st.columns(2)
     # Filtrering
     # with cols[0]:
+    min_date = df["Publication Date"].min().date()
+    max_date = df["Publication Date"].max().date()
+    start_date = min_date
+    end_date = max_date
     with st.expander("Filter"):
         cols = st.columns(2)
         
@@ -59,12 +63,14 @@ def filter_tab(df):
 
         with cols[1]:
             col1, col2 = st.columns(2)
-
-            min_date = df["Publication Date"].min().date()
-            max_date = df["Publication Date"].max().date()
-
-            start_date = pd.to_datetime(col1.date_input("Start date", min_value=min_date, max_value=max_date, value=min_date))
-            end_date = pd.to_datetime(col2.date_input("End date", min_value=start_date, max_value=max_date, value=max_date))
+            # min = min_date
+            # min_date = df["Publication Date"].min().date()
+            # max_date = df["Publication Date"].max().date()
+            start_date = pd.to_datetime(col1.date_input("Start date", min_value=min_date, max_value=max_date, value=start_date))
+            end_date = pd.to_datetime(col2.date_input("End date", min_value=min_date, max_value=max_date, value=end_date))
+            if end_date < start_date:
+                end_date = start_date
+            df = df[(df["Publication Date"] <= end_date) & (df["Publication Date"] >= start_date)]
         # Körkort & erfarenhet
         # Lägga till checkbox för inget körkort och ingen erfarenhet där man filtrerar efter == False istället
         # top_col = st.columns(3)
@@ -111,25 +117,25 @@ def plot_tab(df):
     # dela upp i 2 columns, en för filtrering och metrics, en med plot
     cols = st.columns(2)
     
-    with cols[0]:
+    # with cols[0]:
     # Göra till en annan tab, med plots och metrics, och en för 
     # Metrics och Barcharts
-        main_columns = ["Occupation Group", "Employer Name", "Occupation", "Workplace City"]
-        choice = st.selectbox("Välj kolumn att gruppera på:", main_columns)
+    main_columns = ["Occupation Group", "Employer Name", "Occupation", "Workplace City"]
+    choice = st.selectbox("Välj kolumn att gruppera på:", main_columns)
 
-        st.markdown(f"## Topp 5: {choice}")
-        new_df = group_by(df, choice)
-        show_metrics(new_df, choice, "Vacancies", 5)
+    st.markdown(f"## Topp 5: {choice}")
+    new_df = group_by(df, choice)
+    show_metrics(new_df, choice, "Vacancies", 5)
 
-        rows = st.selectbox("Välj specifikt värde:", ["Visa alla"] + order_vacancies(df,choice))
-        max_bars = 15
-        if len(new_df) < max_bars:
-            max_bars = len(new_df)
-        bars = st.slider("Antal staplar att visa:", min_value=5, max_value=max_bars, step=1, key=f"{choice}")
+    rows = st.selectbox("Välj specifikt värde:", ["Visa alla"] + order_vacancies(df,choice))
+    max_bars = 15
+    if len(new_df) < max_bars:
+        max_bars = len(new_df)
+    bars = st.slider("Antal staplar att visa:", min_value=5, max_value=max_bars, step=1, key=f"{choice}")
         
-    with cols[1]:
-        with st.expander("Översikt (filtrerad)", expanded=True):
-            overview(df)
+    # with cols[1]:
+    #     with st.expander("Översikt (filtrerad)", expanded=True):
+    #         overview(df)
             
     if rows == "Visa alla":
         st.plotly_chart(barplot_df(new_df, choice, bars))
@@ -185,8 +191,28 @@ def layout():
     # Hämta df baserat på val av vy
     view_choice = st.sidebar.selectbox("Välj vy", list(page.keys()))
     page_choice = st.sidebar.radio("Select a page", list(pages.keys()))
+    # st.sidebar.metric()
     # st.sidebar(overview(df))
+    # with st.sidebar():
     df = get_dataframe(page[view_choice])
+    # box = st.sidebar.container(border=True)
+    
+    # with box:
+        # col1, col2= st.columns(2)
+    # with col1:
+    st.sidebar.metric("Total Vacancies", int(df["Vacancies"].sum()))
+# with col2:
+    most_vacant_occupation = df.groupby("Occupation")["Vacancies"].sum().idxmax()
+    st.sidebar.metric("Most Vacant Occupation", most_vacant_occupation)
+# with col2:
+    highest_vacancy_city = df.groupby("Workplace City")["Vacancies"].sum().idxmax()
+    st.sidebar.metric("Highest Vacancy City", highest_vacancy_city)
+# with col1:
+    avg_vacancies_per_occupation = int(df.groupby("Occupation")["Vacancies"].sum().mean())
+    st.sidebar.metric("Avg Vacancies/Occupation", avg_vacancies_per_occupation)
+# with col1:
+    st.sidebar.metric("Total Occupations", df["Occupation"].nunique())
+    # sidebar_overview(df)
     
     st.markdown(f"# Jobbdata för: {view_choice}")
     # with st.expander("Översikt (alla jobb i vyn)", expanded=True):
