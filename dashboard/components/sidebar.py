@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import load_data
+from utils.utils import load_data
 
 def render_sidebar():
     # Vyer för olika marts
@@ -16,18 +16,27 @@ def render_sidebar():
     df = load_data(page[view_choice])
     st.session_state["df"] = df
     
-    # Visa en översikt av datan
-    st.sidebar.metric("Total Vacancies", int(df["Vacancies"].sum()))
+    box = st.sidebar.container()
     
-    most_vacant_occupation = df.groupby("Occupation")["Vacancies"].sum().idxmax()
-    st.sidebar.metric("Most Vacant Occupation", most_vacant_occupation)
-    
-    highest_vacancy_city = df.groupby("Workplace City")["Vacancies"].sum().idxmax()
-    st.sidebar.metric("Highest Vacancy City", highest_vacancy_city)
-    
-    avg_vacancies_per_occupation = int(df.groupby("Occupation")["Vacancies"].sum().mean())
-    st.sidebar.metric("Avg Vacancies/Occupation", avg_vacancies_per_occupation)
-    
-    st.sidebar.metric("Total Occupations", df["Occupation"].nunique())
+    with box:
+        col1, col2 = st.columns(2)
+        # Visa en översikt av datan
+        col1.metric("Total Job Ads", len(df))
+        col2.metric("Total Vacancies", int(df["Vacancies"].sum()))
+        
+        avg_vacancies_per_occupation = int(df.groupby("Occupation")["Vacancies"].sum().mean())
+        col1.metric("Avg Vacancies/Occupation", avg_vacancies_per_occupation)
+        
+        avg_vacancies_per_employer = int(df.groupby("Employer Name")["Vacancies"].sum().mean())
+        col2.metric("Avg Vacancies/Employer", avg_vacancies_per_employer)
+        
+        most_vacant_occupation = df.groupby("Occupation")["Vacancies"].sum().idxmax()
+        st.sidebar.metric("Most Vacant Occupation", most_vacant_occupation)
+        
+        highest_vacancy_city = df.groupby("Workplace City")["Vacancies"].sum().idxmax()
+        st.sidebar.metric("Highest Vacancy City", highest_vacancy_city)
+        
+        highest_vacancy_employer = df.groupby("Employer Name")["Vacancies"].sum().idxmax()
+        st.sidebar.metric("Highest Vacancy Employer", highest_vacancy_employer)
     
     return df
