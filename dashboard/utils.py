@@ -17,8 +17,18 @@ def get_df():
         st.stop()
 
 # Sortera kolumner efter antal vacancies till selectboxes
-def order_vacancies(df, col):
-    return (df.groupby(col)["Vacancies"].sum().sort_values(ascending=False).index.tolist())
+def group_and_sort(df, group_col, agg_col="Vacancies", agg="sum"):
+    # Grouping the data by the group_col and aggregating the agg_col
+    if agg == "sum":
+        grouped_df = df.groupby(group_col)[agg_col].sum().reset_index()
+    elif agg == "count":
+        grouped_df = df.groupby(group_col)[agg_col].count().reset_index()
+    else:
+        raise ValueError("agg must be either sum or count")
+    
+    sorted_df = grouped_df.sort_values(by=agg_col, ascending=False)
+    
+    return sorted_df
 
 def split_unique_cols(df, column):
     split_cols = df[column].dropna().str.split(",")
