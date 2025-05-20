@@ -32,13 +32,7 @@ def sidebar_metrics(kpis,labels,col_amount):
     for col, label, kpi in zip(cols, labels, kpis):
         with col: 
             st.sidebar.metric(label=label, value=kpi)
-# Enkel filtrering av df vid selectbox val
-def filter_df(df, column, statement):
-    return df[df[column] == statement]
 
-# Enkel gruppering till plots och metrics med selectbox val
-def group_by(df, column):
-    return df.groupby(column)["Vacancies"].sum().reset_index().sort_values("Vacancies", ascending=False)
 
 def overview(df):
     # Metric för totalt antal
