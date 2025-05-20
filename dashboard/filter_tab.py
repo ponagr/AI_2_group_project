@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+from utils import group_and_sort, split_unique_cols
 
 def filter_tab(df):
     # Initiate min and max date
@@ -11,17 +13,17 @@ def filter_tab(df):
         cols = st.columns(2)
         
         # Yrkesområde
-        group = cols[0].selectbox("Välj yrkesområde:", ["Alla"] + order_vacancies(df,"Occupation Group"))
+        group = cols[0].selectbox("Välj yrkesområde:", ["Alla"] + group_and_sort(df, "Occupation Group"))
         if group != "Alla":
             df = df[df["Occupation Group"] == group]
         
         # Stad
-        cities = cols[0].multiselect("Filtrera efter stad(er):", order_vacancies(df,"Workplace City"))
+        cities = cols[0].multiselect("Filtrera efter stad(er):", group_and_sort(df,"Workplace City"))
         if cities:
             df = df[df["Workplace City"].isin(cities)]
         
         # Arbetsgivare
-        employers = cols[0].multiselect("Filtrera efter arbetsgivare:", order_vacancies(df,"Employer Name"))
+        employers = cols[0].multiselect("Filtrera efter arbetsgivare:", group_and_sort(df,"Employer Name"))
         if employers:
             df = df[df["Employer Name"].isin(employers)]
 
