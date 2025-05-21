@@ -49,3 +49,19 @@ def show_vacancies_by_city(df):
 def show_top_ads(df):
     st.subheader("Example Job Ads")
     st.dataframe(df[["headline", "employer_name", "workplace_city", "publication_date"]].head(10))
+
+
+def main():
+    section = sidebar_menu()
+    filtered_df = apply_filters(df)
+
+    if section == "Overview":
+        show_kpi(filtered_df)
+    elif section == "Vacancies by City":
+        show_vacancies_by_city(filtered_df)
+    elif section == "Example Job Ads":
+        show_top_ads(filtered_df)
+
+
+if __name__ == "__main__":
+    main()
