@@ -20,6 +20,13 @@ def show_kpi(df):
     st.subheader("Översikt")
     st.metric("Totalt antal annonser", len(df))
 
+def apply_filters(df):
+    st.sidebar.subheader("Filter by City")
+    cities = st.sidebar.multiselect("Choose city/cities", sorted(df["workplace_city"].dropna().unique()))
+    if cities:
+        df = df[df["workplace_city"].isin(cities)]
+    return df
+
 
 def show_vacancies_by_city(df):     
     st.subheader("Vacancies by City")
@@ -38,3 +45,7 @@ def show_vacancies_by_city(df):
     )
 
     st.plotly_chart(fig)
+
+def show_top_ads(df):
+    st.subheader("Example Job Ads")
+    st.dataframe(df[["headline", "employer_name", "workplace_city", "publication_date"]].head(10))
