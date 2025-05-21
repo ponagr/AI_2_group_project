@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from components.sidebar import render_sidebar
 from components.filter_tab import filter_tab
-from components.dashboard_views import desc_tab, plot_tab, show_metrics
+from components.dashboard_views import plot_tab, metrics_view
 
 st.set_page_config(page_title="Analytics by city", layout="wide")
 
@@ -13,10 +13,5 @@ df = render_sidebar()
 
 filtered_df = filter_tab(df)
 
-show_metrics(filtered_df, "Workplace City")
-
-tab1, tab2 = st.tabs(["Plots", "Description"])
-with tab1:
-    plot_tab(filtered_df, "Workplace City")
-with tab2:
-    desc_tab(filtered_df)
+metrics_view(filtered_df, "Workplace City")
+plot_tab(filtered_df, "Workplace City")
