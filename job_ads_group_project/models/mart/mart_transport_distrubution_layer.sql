@@ -1,7 +1,8 @@
 with job_ads as (select * from {{ ref('mart_full_job_ads') }})
 
 
-select 
+select
+    occupation_field,
     occupation_group,
     occupation,
     headline,

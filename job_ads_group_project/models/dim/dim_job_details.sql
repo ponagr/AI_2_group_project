@@ -10,7 +10,7 @@ select
     coalesce(employment_type, 'Ej Angiven') as employment_type,
     coalesce(duration, 'Ej Angiven') as duration,
     coalesce(salary_type, 'Ej Angiven') as salary_type,
-    coalesce(salary_description, 'Ej Angiven') as salary_description,
+    coalesce( {{ salary_description('salary_description') }}, 'Ej Angiven') as salary_description,
     coalesce(working_hours_type, 'Ej Angiven') as working_hours_type,
     scope_of_work_min,
     scope_of_work_max
