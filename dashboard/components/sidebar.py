@@ -19,16 +19,20 @@ def render_sidebar():
     box = st.sidebar.container()
     
     with box:
+        st.markdown("### Total:")
         col1, col2 = st.columns(2)
         # Visa en översikt av datan
-        col1.metric("Total Job Ads", len(df))
-        col2.metric("Total Vacancies", int(df["Vacancies"].sum()))
+        col1.metric("Job Ads", len(df))
+        col2.metric("Vacancies", int(df["Vacancies"].sum()))
+        
+        st.markdown("### Avg Vacancies:")
+        col1, col2 = st.columns(2)
         
         avg_vacancies_per_occupation = int(df.groupby("Occupation")["Vacancies"].sum().mean())
-        col1.metric("Avg Vacancies/Occupation", avg_vacancies_per_occupation)
+        col1.metric("Per Occupation", avg_vacancies_per_occupation)
         
         avg_vacancies_per_employer = int(df.groupby("Employer Name")["Vacancies"].sum().mean())
-        col2.metric("Avg Vacancies/Employer", avg_vacancies_per_employer)
+        col2.metric("Per Employer", avg_vacancies_per_employer)
         
         most_vacant_occupation = df.groupby("Occupation")["Vacancies"].sum().idxmax()
         st.sidebar.metric("Most Vacant Occupation", most_vacant_occupation)
