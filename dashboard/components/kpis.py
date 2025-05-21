@@ -41,64 +41,20 @@ def overview(df):
     unique_groups = df["Occupation Group"].nunique()
     unique_cities = df["Workplace City"].nunique()
     unique_occupations = df["Occupation"].nunique()
-    unique_employers = df["Employer Name"].nunique()
+    unique_employers = df["Employer Workplace"].nunique()
     
-    st.markdown("### Totalt antal")
     values = [total_ads, total_jobs]
-    labels = ["Job ads","Lediga jobb"]
-    metrics(values, labels, 2)
+    col1, col2= st.columns(2)
+    col1.metric("Job ads", total_ads)
+    col2.metric("Vacancies", total_jobs)
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Occupation Groups", unique_groups)
+    col2.metric("Employers", unique_employers)
+    col3.metric("Occupations", unique_occupations)
+    col4.metric("Cities", unique_cities)
+    # labels = ["Job ads","Lediga jobb"]
+    # metrics(values, labels, 2)
     
-    # Metric för andel i %
-    antal_heltid = df[df["Working Hours Type"] == "Heltid"]["Vacancies"].sum()
-    antal_korkort = df[df["Driver License"] == True]["Vacancies"].sum()
-    antal_experience = df[df["Experience Required"] == True]["Vacancies"].sum()
-
-    heltid_andel = round(antal_heltid / total_jobs * 100, 1)
-    korkort_andel = round(antal_korkort / total_jobs * 100, 1)
-    experience_andel = round(antal_experience / total_jobs * 100, 1)
-    
-    st.markdown("### Krav för jobb")
-    labels2 = ["Heltid", "Körkort", "Tidigare Erfarenhet"]
-    values2 = [f"{heltid_andel}%", f"{korkort_andel} %", f"{experience_andel} %"]
-    metrics(values2, labels2, 3)
-
-    st.markdown("### Unikt antal")
-    values1 = [unique_groups, unique_employers, unique_occupations, unique_cities]
-    labels1 = ["Yrkesgrupper","Arbetsgivare","Yrken","Orter"]
-    metrics(values1, labels1, 4)
-    
-def sidebar_overview(df):
-    # Metric för totalt antal
-    total_ads = len(df)
-    total_jobs = df["Vacancies"].sum()
-    unique_groups = df["Occupation Group"].nunique()
-    unique_cities = df["Workplace City"].nunique()
-    unique_occupations = df["Occupation"].nunique()
-    unique_employers = df["Employer Name"].nunique()
-    
-    st.sidebar.markdown("### Totalt antal")
-    values = [total_ads, total_jobs]
-    labels = ["Job ads","Lediga jobb"]
-    # st.sidebar.columns()
-    # st.sidebar.metric()
-    # sidebar_metrics(values, labels, 2)
-    
-    
-    # Metric för andel i %
-    antal_heltid = df[df["Working Hours Type"] == "Heltid"]["Vacancies"].sum()
-    antal_korkort = df[df["Driver License"] == True]["Vacancies"].sum()
-    antal_experience = df[df["Experience Required"] == True]["Vacancies"].sum()
-
-    heltid_andel = round(antal_heltid / total_jobs * 100, 1)
-    korkort_andel = round(antal_korkort / total_jobs * 100, 1)
-    experience_andel = round(antal_experience / total_jobs * 100, 1)
-    
-    st.markdown("### Krav för jobb")
-    labels2 = ["Heltid", "Körkort", "Tidigare Erfarenhet"]
-    values2 = [f"{heltid_andel}%", f"{korkort_andel} %", f"{experience_andel} %"]
-    sidebar_metrics(values2, labels2, 3)
-
-    st.markdown("### Unikt antal")
-    values1 = [unique_groups, unique_employers, unique_occupations, unique_cities]
-    labels1 = ["Yrkesgrupper","Arbetsgivare","Yrken","Orter"]
-    sidebar_metrics(values1, labels1, 4)
+    # values1 = [unique_groups, unique_employers, unique_occupations, unique_cities]
+    # labels1 = ["Yrkesgrupper","Arbetsgivare","Yrken","Orter"]
+    # metrics(values1, labels1, 4)
