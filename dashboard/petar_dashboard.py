@@ -19,3 +19,22 @@ def sidebar_menu():
 def show_kpi(df):
     st.subheader("Översikt")
     st.metric("Totalt antal annonser", len(df))
+
+
+def show_vacancies_by_city(df):     
+    st.subheader("Vacancies by City")
+    # Group and sum vacancies by city
+    grouped_df = df.groupby("workplace_city")["vacancies"].sum().reset_index()
+    sorted_df = grouped_df.sort_values(by="vacancies", ascending=False)
+
+    top_n = st.slider("Number of cities to display", min_value=5, max_value=20, value=10)
+
+    fig = px.bar(       # Create bar chart
+        sorted_df.head(top_n),
+        x="workplace_city",
+        y="vacancies",
+        labels={"workplace_city": "City", "vacancies": "Number of Vacancies"},
+        title="Top Cities by Job Vacancies"
+    )
+
+    st.plotly_chart(fig)
