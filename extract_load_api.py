@@ -11,8 +11,10 @@ def _get_ads(url_for_search, params):
     response.raise_for_status()  # check for http errors
     return json.loads(response.content.decode("utf8"))
 
+dlt.config["load.truncate_staging_dataset"] = True
 
-@dlt.resource(write_disposition="append")
+@dlt.resource(write_disposition="merge",
+              primary_key="id")
 def jobsearch_resource(params):
     """
     params should include at least:
