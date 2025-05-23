@@ -3,9 +3,6 @@ import requests
 import json
 from pathlib import Path
 
-# for illustration purpose, we only request data for one occupation field
-# params = {"limit": 100, "occupation-field": "MVqp_eS8_kDZ"}
-
 
 def _get_ads(url_for_search, params):
     headers = {"accept": "application/json"}
