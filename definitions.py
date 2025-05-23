@@ -73,11 +73,6 @@ def dbt_models(context: dg.AssetExecutionContext, dbt: DbtCliResource):
     yield from dbt.cli(["build"], context=context).stream() #compile the project and collect all results
 
 
-@dg.asset(deps=[*dbt_models.keys])
-def generate_docs(dbt: DbtCliResource):
-    dbt.cli(["docs", "generate"]).wait()
-
-
 # ==================== #
 #                      #
 #         Job          #
@@ -86,7 +81,7 @@ def generate_docs(dbt: DbtCliResource):
 
 job_dlt = dg.define_asset_job("job_dlt", selection=dg.AssetSelection.keys("dlt_jobads_source_get_hits"))
 
-job_dbt = dg.define_asset_job("job_dbt", selection=dg.AssetSelection.assets("dbt_deps",*dbt_models.keys,"generate_docs"))
+job_dbt = dg.define_asset_job("job_dbt", selection=dg.AssetSelection.assets("dbt_deps",*dbt_models.keys))
 
 # ==================== #
 #                      #
@@ -97,7 +92,7 @@ job_dbt = dg.define_asset_job("job_dbt", selection=dg.AssetSelection.assets("dbt
 #schedule for the first job
 schedule_dlt = dg.ScheduleDefinition(
     job=job_dlt,
-    cron_schedule="03 10 * * *" #UTC, -2 timmar för sverige, 45 09 = 11.45
+    cron_schedule="28 13 * * *" #UTC, -2 timmar för sverige, 45 09 = 11.45
 )
 
 # ==================== #
@@ -118,12 +113,10 @@ def dlt_load_sensor():
 #                      #
 # ==================== #
 
-# dbt_models_deps = dg.AssetKey("dbt_deps")
-# dbt_models = dbt_models.with_attributes(deps=[dbt_models_deps])
 
 # Dagster object that contains the dbt assets and resource
 defs = dg.Definitions(
-                    assets=[dlt_load, dbt_deps, dbt_models, generate_docs],
+                    assets=[dlt_load, dbt_deps, dbt_models],
                     resources={"dlt": dlt_resource, "dbt": dbt_resource},
                     jobs=[job_dlt, job_dbt],
                     schedules=[schedule_dlt],
