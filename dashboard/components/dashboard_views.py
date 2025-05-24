@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from utils.utils import aggregate_by_group
 from components.kpis import show_metrics
 from components.plots import barplot_df, lineplot_df, pieplot_df
@@ -25,38 +26,41 @@ def plot_tab(df, column=None):
     if column is None:
         selection = st.pills("select column:", columns, default="Occupation Field", label_visibility="hidden")
         
-        if selection == "Occupation Field":
-            vacancies_over_time_df = df.groupby("Publication Date").size().reset_index(name="Vacancies")
-            color_col = None
-        else:
-            vacancies_over_time_df = df.groupby(["Publication Date", selection]).size().reset_index(name="Vacancies")
-            color_col = selection
+        vacancies_over_time_df = df.groupby([pd.Grouper(key="Publication Date", freq="W"), selection])["Vacancies"].sum().reset_index()
+        color_col = selection
         
         df = aggregate_by_group(df, selection)
         
         bar, line, pie = st.tabs(["Barchart", "Linechart", "Piechart"])
+        num_groups = st.slider("Number of groups to show", min_value=3, max_value=15, value=5)
         with bar:
-            barplot_df(df, selection)
+            st.markdown(f'### Total vacancies by {selection}')
+            barplot_df(df, selection, bar_ammount=num_groups)
         
         with line:
-            lineplot_df(vacancies_over_time_df, x_column="Publication Date", y_column="Vacancies", color_column=color_col)
+            st.markdown(f'### Total vacancies by {selection} over time (weekly)')
+            lineplot_df(vacancies_over_time_df, x_column="Publication Date", y_column="Vacancies", color_column=color_col, bar_ammount=num_groups)
         
-        with pie:  
+        with pie:
+            st.markdown(f'### Total vacancies by {selection}')
             pieplot_df(df, selection)
     
     else:
-        line_chart_df = df.groupby(["Publication Date", column]).size().reset_index(name="Total Ads")
+        vacancies_over_time_df = df.groupby([pd.Grouper(key="Publication Date", freq="W"), column])["Vacancies"].sum().reset_index()
         df = aggregate_by_group(df, column)
         
         bar, line, pie = st.tabs(["Barchart", "Linechart", "Piechart"])
-        num_groups = st.slider("Number of groups to show", min_value=1, max_value=10, value=5)
+        num_groups = st.slider("Number of groups to show", min_value=1, max_value=15, value=5)
         with bar:
+            st.markdown(f"### Total vacancies by {column}")
             barplot_df(df, column, y_column="Vacancies", bar_ammount=num_groups)
         
         with line:
-            lineplot_df(line_chart_df, x_column="Publication Date", y_column="Total Ads", color_column=column)
+            st.markdown(f"### Total ads by {column} over time (weekly)")
+            lineplot_df(vacancies_over_time_df, x_column="Publication Date", y_column="Vacancies", color_column=column)
         
         with pie:
+            st.markdown(f"### Total vacancies by {column}")
             pieplot_df(df, column, y_column="Vacancies", bar_ammount=num_groups)
 
 def desc_tab(df):
