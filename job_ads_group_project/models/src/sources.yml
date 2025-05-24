@@ -12,6 +12,9 @@ sources:
             - unique
             - not_null
         identifier: job_ads
+        meta:
+          dagster:
+            asset_key: ['dlt_jobads_source_get_hits']
       - name: stg_driving_license
         description: "Table containing drivers license type"
         columns:
@@ -21,6 +24,7 @@ sources:
             - unique
             - not_null
         identifier: job_ads__driving_license
+
       - name: stg_must_skills
         description: "Table containing skills needed for job ad"
         columns:

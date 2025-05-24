@@ -15,7 +15,7 @@ def metrics_view(df, column=None):
 def plot_tab(df, column=None):
     
     bar, line, pie = st.tabs(["Barchart", "Linechart", "Piechart"])
-    line_chart_df = df.groupby(["Publication Date", "Occupation Field"]).size().reset_index(name="Total Ads")
+    # line_chart_df = df.groupby(["Publication Date", "Occupation Field"]).size().reset_index(name="Total Ads")
 
     line_chart_df = df.groupby(["Publication Date", column]).size().reset_index(name="Total Ads")
     df = aggregate_by_group(df, column)
