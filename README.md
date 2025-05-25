@@ -40,10 +40,9 @@ job_ads_group_project:
   target: dev
 ```
 
-**Select python intepreter for project:**    
+**Select python interpreter for project:**    
 ```bash
-Ctrl+Shift+P > Python: Select Intepreter -> python 3.12.8('.venv':venv)
-```
+Ctrl+Shift+P > Python: Select Interpreter -> python 3.12.8('.venv':venv)
 
 ### Run Project
 
