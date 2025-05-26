@@ -1,0 +1,51 @@
+models:
+  - name: dim_employer
+    description: "Dimension table containing employer and workplace information, including names,
+      organization numbers, and location details. Built from `src_employer`."
+    columns:
+      - name: employer_id
+        description: "Surrogate key generated from employer_workplace and workplace_city"
+        tests:
+          - unique
+          - not_null
+          - dim_row_count_match
+
+      - name: employer_name
+        description: "The name of the employer"
+        tests:
+          - not_null
+
+      - name: employer_workplace
+        description: "Name or title of the workplace associated with the employer"
+        tests:
+          - not_null
+
+      - name: employer_organization_number
+        description: "The organization number for the employer"
+        tests:
+          - not_null
+
+      - name: workplace_country
+        description: "Country where the job is located"
+        tests:
+          - not_null
+
+      - name: workplace_region
+        description: "Region of the workplace"
+        tests:
+          - not_null
+
+      - name: workplace_city
+        description: "Municipality where the job is located"
+        tests:
+          - not_null
+
+      - name: workplace_street_address
+        description: "Street address for the workplace"
+        tests:
+          - not_null
+
+      - name: workplace_postcode
+        description: "Postcode for the workplace"
+        tests:
+          - not_null

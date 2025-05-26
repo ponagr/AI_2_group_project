@@ -1,0 +1,26 @@
+models:
+  - name: dim_occupation
+    description: "Dimension table containing occupation information for job ads, including occupation group and field.
+      Built from `src_occupation`."
+    columns:
+      - name: occupation_id
+        description: "Surrogate key generated from from the occupation name."
+        tests:
+          - unique
+          - not_null
+          - dim_row_count_match
+
+      - name: occupation
+        description: "Name of the specific occupation"
+        tests:
+          - not_null
+          
+      - name: occupation_group
+        description: "Name of the occupation group"
+        tests:
+          - not_null
+
+      - name: occupation_field
+        description: "Name of the occupation field"
+        tests:
+          - not_null
