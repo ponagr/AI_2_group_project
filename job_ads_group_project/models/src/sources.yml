@@ -3,35 +3,18 @@ sources:
     description: "job_ads raw data source"
     schema: staging
     tables:
+
       - name: stg_ads
         description: "Main-table used for creating models"
-        columns:
-        - name: _dlt_id
-          description: "Primary Key"
-          tests:
-            - unique
-            - not_null
         identifier: job_ads
         meta:
           dagster:
             asset_key: ['dlt_jobads_source_get_hits']
+
       - name: stg_driving_license
         description: "Table containing drivers license type"
-        columns:
-        - name: _dlt_id
-          description: "Primary Key"
-          tests:
-            - unique
-            - not_null
         identifier: job_ads__driving_license
 
       - name: stg_must_skills
         description: "Table containing skills needed for job ad"
-        columns:
-        - name: _dlt_id
-          description: "Primary Key"
-          tests:
-            - unique
-            - not_null
         identifier: job_ads__must_have__skills
-        
