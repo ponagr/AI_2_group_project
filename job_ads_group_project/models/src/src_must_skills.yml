@@ -1,0 +1,13 @@
+models:
+  - name: src_must_skills
+    description: "Model containing must-have skills for job ads"
+    columns:
+      - name: label
+        description: "Skill required for the job ad"
+        tests:
+          - not_null
+      
+      - name: _dlt_parent_id
+        description: "Foreign key referencing the job ad this skill belongs to"
+        tests:
+          - not_null

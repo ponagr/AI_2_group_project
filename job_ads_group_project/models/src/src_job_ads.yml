@@ -1,0 +1,49 @@
+models:
+  - name: src_job_ads
+    description: "Model containing raw job ads data from the staging layer."
+    columns:
+      - name: id
+        description: "Public job ad ID"
+        tests:
+          - not_null
+          - unique
+
+      - name: _dlt_id
+        description: "Internal identifier from the data load pipeline"
+        tests:
+          - not_null
+          - unique
+
+      - name: occupation__label
+        description: "Occupational category"
+
+      - name: employer__workplace
+        description: "Name of the workplace offering the job"
+
+      - name: workplace_address__municipality
+        description: "Municipality where the job is located"
+
+      - name: experience_required
+        description: "Whether previous experience is required"
+
+      - name: driving_license_required
+        description: "Whether a driver's license is required"
+
+      - name: access_to_own_car
+        description: "Whether access to own car is needed"
+
+      - name: number_of_vacancies
+        description: "Number of job openings in this ad"
+        tests:
+          - not_null
+
+      - name: relevance
+        description: "Relevance score from matching algorithm"
+
+      - name: publication_date
+        description: "Date the ad was published"
+        tests:
+          - not_null
+
+      - name: application_deadline
+        description: "Final date to apply for the job"

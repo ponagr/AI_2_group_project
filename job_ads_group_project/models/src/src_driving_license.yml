@@ -1,0 +1,13 @@
+models:
+  - name: src_driving_license
+    description: "Model containing driving license types for job ads"
+    columns:
+      - name: label
+        description: "Type of driving license required for the job"
+        tests:
+          - not_null
+      
+      - name: _dlt_parent_id
+        description: "Foreign key referencing the job ad this license belongs to"
+        tests:
+          - not_null

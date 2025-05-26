@@ -1,0 +1,44 @@
+models:
+  - name: src_job_details
+    description: "Model containing job details from raw staging data, including job description, employment type,
+      duration, salary information, scope of work, and working hours type."
+    columns:
+      - name: id
+        description: "Unique job ad identifier"
+        tests:
+          - not_null
+          - unique
+
+      - name: headline
+        description: "Headline of the job advertisement"
+        tests:
+          - not_null
+
+      - name: description
+        description: "Plain text job description"
+
+      - name: description_html
+        description: "Formatted (HTML) job description"
+
+      - name: employment_type
+        description: "Type of employment"
+        tests:
+          - not_null
+
+      - name: duration
+        description: "Job duration label (e.g., permanent, temporary)"
+
+      - name: salary_description
+        description: "Free text description of the salary"
+
+      - name: salary_type
+        description: "Type of salary (e.g., hourly, monthly)"
+
+      - name: scope_of_work_min
+        description: "Minimum scope of work (e.g., % of full-time)"
+
+      - name: scope_of_work_max
+        description: "Maximum scope of work"
+
+      - name: working_hours_type
+        description: "Type of working hours (e.g., full-time, part-time)"
