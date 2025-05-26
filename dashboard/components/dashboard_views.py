@@ -1,6 +1,5 @@
 import streamlit as st
-import pandas as pd
-from utils.utils import filter_df, aggregate_by_group
+from utils.utils import aggregate_by_group
 from components.kpis import show_metrics
 
 import plotly.express as px
@@ -13,27 +12,40 @@ def metrics_view(df, column=None):
         show_metrics(df, column, "Vacancies", 5)
 
 def plot_tab(df, column=None):
-    
     bar, line, pie = st.tabs(["Barchart", "Linechart", "Piechart"])
-    # line_chart_df = df.groupby(["Publication Date", "Occupation Field"]).size().reset_index(name="Total Ads")
-
+    
+    df = df[(df[column] != "Ej Angiven") & (df[column] != "Not Specified") & (df[column] != "Undefined")]
+    
     line_chart_df = df.groupby(["Publication Date", column]).size().reset_index(name="Total Ads")
+    line_chart_df = line_chart_df[line_chart_df["Publication Date"] > 5]
+    
     df = aggregate_by_group(df, column)
     num_groups = st.slider("Number of groups to show", min_value=1, max_value=10, value=5)
     with bar:
         st.markdown("### Total vacancies for top " + str(num_groups) + " " + column)
-        fig = px.bar(df.head(num_groups), x=column, y="Vacancies")
+        fig = px.bar(df.head(num_groups), x=column, y="Vacancies", color=column)
         st.plotly_chart(fig)
     
     with line:
-        st.markdown("### Total job ads for top " + str(num_groups) + " " + column + " by publication date")
-        fig = px.line(line_chart_df.head(num_groups), x="Publication Date", y="Total Ads", color=column)
+        st.markdown(f"### Total job ads over time by {column}")
+        fig = px.line(line_chart_df, x="Publication Date", y="Total Ads", color=column, line_shape='linear')
+        fig.update_layout(
+            template="plotly_white",  # ren stil
+            hovermode="x unified",  # samlad hover-info
+            margin=dict(l=20, r=20, t=60, b=40),
+            height=500,
+        )
+        fig.update_xaxes(
+            tickformat="%Y-%m-%d",  # YYYY-MM-DD
+            tickangle=45,
+            showgrid=True
+        )
         st.plotly_chart(fig)
     
     with pie:
         st.markdown("### Total vacancies for top " + str(num_groups) + " " + column)
         df = aggregate_by_group(df, column)
-        fig = px.pie(df.head(num_groups), values="Vacancies", names=column)
+        fig = px.pie(df.head(num_groups), values="Vacancies", names=column, color=column)
         st.plotly_chart(fig)
 
 def desc_tab(df):
