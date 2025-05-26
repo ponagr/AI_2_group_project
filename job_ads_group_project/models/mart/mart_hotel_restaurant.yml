@@ -1,0 +1,91 @@
+models:
+  - name: mart_hotel_restaurant
+    description: "This model filters and presents job ads specifically for the 'Hotell, restaurang, storhushåll' occupational field."
+      
+    columns:
+      - name: occupation_field
+        description: "Occupation field category. This model is filtered to only include 'Hotell, restaurang, storhushåll'."
+
+      - name: occupation_group
+        description: "A grouping within the occupation field representing a more specific classification."
+
+      - name: occupation
+        description: "The specific occupation label for the job ad."
+
+      - name: headline
+        description: "Headline of the job advertisement"
+
+      - name: employer_name
+        description: "Name of the employer posting the job."
+
+      - name: description
+        description: "Plain text job description"
+
+      - name: duration
+        description: "Job duration label (e.g., permanent, temporary)"
+
+      - name: salary_type
+        description: "Type of salary (e.g., hourly, monthly)"
+
+      - name: salary_description
+        description: "Free text description of the salary"
+
+      - name: working_hours_type
+        description: "Type of working hours (e.g., full-time, part-time)"
+
+      - name: employer_workplace
+        description: "Name or title of the workplace associated with the employer"
+
+      - name: employer_organization_number
+        description: "Organization number of the employer"
+
+      - name: workplace_country
+        description: "Country where the job is located"
+
+      - name: workplace_region
+        description: "Region of the job's workplace location"
+
+      - name: workplace_city
+        description: "Municipality where the job is based"
+
+      - name: workplace_street_address
+        description: "Street address of the workplace"
+
+      - name: workplace_postcode
+        description: "Postal code of the job's location"
+
+      - name: required_license
+        description: "Type of driving license required for the job"
+
+      - name: required_skills
+        description: "Skill required for the job ad"
+
+      - name: description_html
+        description: "HTML formatted job description."
+
+      - name: scope_of_work_min
+        description: "Minimum scope of work (e.g., % of full-time)"
+
+      - name: scope_of_work_max
+        description: "Maximum scope of work"
+
+      - name: vacancies
+        description: "Number of vacancies for the job ad."
+
+      - name: relevance
+        description: "Relevance score for the job ad."
+
+      - name: application_deadline
+        description: "Final date to apply for the job"
+
+      - name: experience_required
+        description: "Whether previous experience is required for the job"
+
+      - name: driver_license
+        description: "Whether a drivers license is required for the job"
+
+      - name: access_to_own_car
+        description: "Whether the candidate needs access to their own car"
+
+      - name: publication_date
+        description: "Date the ad was published"
