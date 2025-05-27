@@ -43,4 +43,4 @@ def render_sidebar():
         highest_vacancy_employer = df.groupby("Employer Name")["Vacancies"].sum().idxmax()
         st.sidebar.metric("Highest Vacancy Employer", highest_vacancy_employer)
     
-    return df
+    return df, view_choice

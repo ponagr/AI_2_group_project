@@ -12,6 +12,7 @@ def plot_df(df, x_column, y_column="Vacancies"):
         bar.update_xaxes(tickvals=[True, False], ticktext=["Krav", "Inte Krav"])
         pie.update_xaxes(tickvals=[True, False], ticktext=["Krav", "Inte Krav"])
     pie.update_layout(showlegend=False)
+    pie.update_traces(textposition="inside")
 
     col1.plotly_chart(bar, use_container_width=True)
     col2.plotly_chart(pie)
