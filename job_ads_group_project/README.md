@@ -26,7 +26,7 @@ Examples:
 Dimensional and fact tables created from the staging data, prepared for analysis.
 
 Examples:
-- `dim_job_ads`: Contains job ad details with cleaned and standardized fields.
+- `dim_job_details`: Contains job ad details with cleaned and standardized fields.
 - `dim_employer`: Contains employer information, linked to job ads.
 - `fct_job_ads`: Fact table aggregating job ad data, including counts and metrics.
 
