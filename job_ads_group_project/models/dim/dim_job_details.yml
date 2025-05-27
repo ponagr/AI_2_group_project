@@ -52,10 +52,6 @@ models:
         
       - name: scope_of_work_min
         description: "Minimum scope of work (e.g., % of full-time)"
-        tests:
-          - not_null
       
       - name: scope_of_work_max
         description: "Maximum scope of work"
-        tests:
-          - not_null

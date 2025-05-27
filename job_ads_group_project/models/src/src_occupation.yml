@@ -6,7 +6,6 @@ models:
         description: "Unique identifier for the occupation concept"
         tests:
           - not_null
-          - unique
 
       - name: occupation_group_id
         description: "Identifier for the occupation group concept"

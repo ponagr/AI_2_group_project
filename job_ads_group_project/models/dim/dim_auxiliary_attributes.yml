@@ -13,7 +13,7 @@ models:
       - name: experience_required
         description: "Whether previous experience is required for the job"
 
-      - name: driving_license_required
+      - name: driver_license
         description: "Whether a drivers license is required for the job"
 
       - name: access_to_own_car

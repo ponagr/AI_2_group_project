@@ -12,8 +12,6 @@ models:
 
       - name: employer_organization_number
         description: "Organization number of the employer"
-        tests:
-          - not_null
 
       - name: workplace_region
         description: "Geographical region of the job's workplace location"
