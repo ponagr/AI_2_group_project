@@ -62,7 +62,7 @@ def summarize_description(df):
     response = model.generate_content(prompt)
 
     # städa response text från gemini
-    cleaned = response.text.replace("\n", "").strip("```json")
+    cleaned = response.text.replace("\n", "").replace("```json", "")
     data = json.loads(cleaned)
 
     # strukturera upp datan i dfs för plots och en text-string för sammanfattning
