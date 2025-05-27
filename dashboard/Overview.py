@@ -18,7 +18,7 @@ else:
 tab1, tab2 = st.tabs(["Plots", "Description"])
 with tab1:
     df_new = show_newest_ads(df)
-    # TODO gör om till en funktion med 3 tabs för bars, linjer och piechart
+    
     if field == "Alla jobb":
         col = st.pills("select column:", ["Occupation Field", "Occupation Group", "Occupation", "Workplace City", "Employer Workplace", "Salary Description", "Duration", "Working Hours Type", "Driver License", "Experience Required"], default="Occupation Field", label_visibility="hidden")
     else:
