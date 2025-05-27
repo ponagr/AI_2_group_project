@@ -43,6 +43,7 @@ job_ads_group_project:
 **Select python interpreter for project:**    
 ```bash
 Ctrl+Shift+P > Python: Select Interpreter -> python 3.12.8('.venv':venv)
+```
 
 ### Run Project
 
@@ -53,8 +54,12 @@ dagster dev -f definitions.py
 
 In Assets-tab select all assets and click on Materialize selected
 
+**Run dbt docs**
+```bash
+dbt docs generate && dbt docs serve
+```
+
 **Run streamlit dashboard:**   
 ```bash
 streamlit run dashboard/Overview.py
 ```
-
