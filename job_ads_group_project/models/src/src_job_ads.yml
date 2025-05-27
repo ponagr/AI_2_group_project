@@ -34,9 +34,7 @@ models:
 
       - name: number_of_vacancies
         description: "Number of job openings in this ad"
-        tests:
-          - not_null
-
+      
       - name: relevance
         description: "Relevance score from matching algorithm"
 

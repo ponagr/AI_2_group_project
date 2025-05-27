@@ -6,31 +6,26 @@ models:
         description: "Surrogate key referencing the occupation dimension"
         tests:
           - not_null
-          - unique
 
       - name: employer_id
         description: "Surrogate key referencing the employer dimension"
         tests:
           - not_null
-          - unique
 
       - name: auxiliary_attributes_id
         description: "Surrogate key referencing the auxiliary attributes dimension"
         tests:
           - not_null
-          - unique
 
       - name: job_details_id
         description: "Surrogate key referencing the job details dimension"
         tests:
           - not_null
-          - unique
 
       - name: job_requirements_id
         description: "Surrogate key referencing the job requirements dimension"
         tests:
           - not_null
-          - unique
 
       - name: vacancies
         description: "Number of vacancies available for the job ad"

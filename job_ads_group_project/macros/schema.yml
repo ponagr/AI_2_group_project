@@ -1,0 +1,42 @@
+version: 2
+
+macros:
+  - name: generate_schema_name
+    description: >
+      Overrides dbt's default behavior for determining which schema a model should be built in.
+      Returns the `custom_schema_name` if provided, otherwise falls back to the default `target.schema`.
+    arguments:
+      - name: custom_schema_name
+        type: string
+        description: "Optional custom schema name to use instead of the default target schema."
+      - name: node
+        type: dict
+        description: "The dbt node object that represents the model or resource being built."
+  
+  - name: salary_description
+    description: >
+      Standardizes salary description values by replacing incorrectly encoded text 
+      (e.g., 'Fast l?n') with the correct representation (e.g., 'Fast lön').
+    arguments:
+      - name: column_name
+        type: string
+        description: "The name of the salary column to clean, passed in as a string."
+
+  - name: test_dim_row_count_match
+    description: >
+      Verifierar att antalet distinkta värden i en kolumn i faktatabellen matchar antalet rader i dimensionstabellen.
+    arguments:
+      - name: model
+        description: "The name of the model to check."
+        type: string
+      - name: column_name
+        description: "The name of the column in the fact table to check against the dimension table row count."
+        type: string
+
+  - name: test_mart_row_count_match
+    description: >
+      Verifierar att antalet distinkta värden i en kolumn i faktatabellen och sourcetabellen matchar antalet rader i martstabellen.
+    arguments:
+      - name: model
+        description: "The name of the model to check."
+        type: string
