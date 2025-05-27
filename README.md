@@ -1,6 +1,10 @@
 # AI_2_group_project
 
-## Setup  
+### Project Description
+A school group project with the purpose to build and use a pipeline to extract data from arbetsförmedlingen API using dlt, transforming the data with dbt and orchestrating the whole pipeline using dagster.  
+And then streaming the transformed data onto a dashboard using streamlit, with implemented LLM, filtering and plots for being able to easier analyze the data in different ways.
+
+### Setup Project 
 Start with cloning the repo localy: 
 ```bash
 git clone https://github.com/ponagr/AI_2_group_project.git
@@ -36,25 +40,21 @@ job_ads_group_project:
   target: dev
 ```
 
-***Select python intepreter for project***    
+**Select python interpreter for project:**    
 ```bash
-Ctrl+Shift+P > Python: Select Intepreter -> python 3.12.8('.venv':venv)
+Ctrl+Shift+P > Python: Select Interpreter -> python 3.12.8('.venv':venv)
+
+### Run Project
+
+**Run dagster to load and transform data:**    
+```bash
+dagster dev -f definitions.py
 ```
 
-***Run dbt debug and dbt deps in terminal***    
+In Assets-tab select all assets and click on Materialize selected
+
+**Run streamlit dashboard:**   
 ```bash
-cd job_ads_group_project
-dbt debug
-dbt deps
+streamlit run dashboard/dashboard.py
 ```
 
-**Extensions**    
-För att se filerna i project_descriptions ladda ner:    
-Excel Viewer - av MESCIUS   
-vscode-pdf - av tomoki1207  
-
-## occupation_fields    
-***occupation_field__label***       -    ***occupation_field__concept_id***     
-Hotell, restaurang, storhushåll     -    ScKy_FHB_7wT   
-Installation, drift, underhåll      -    yhCP_AqT_tns   
-Transport, distribution, lager      -    ASGV_zcE_bWf   
