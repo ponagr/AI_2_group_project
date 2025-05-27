@@ -55,6 +55,6 @@ In Assets-tab select all assets and click on Materialize selected
 
 **Run streamlit dashboard:**   
 ```bash
-streamlit run dashboard/dashboard.py
+streamlit run dashboard/Overview.py
 ```
 

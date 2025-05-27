@@ -1,9 +1,16 @@
 import streamlit as st
-import pandas as pd
-from utils.utils import filter_df, aggregate_by_group
+from utils.utils import aggregate_by_group
 from components.kpis import show_metrics
+from gemini.llm import summarize_description
 
 import plotly.express as px
+
+def show_newest_ads(df):
+    latest_date = df.sort_values("Publication Date", ascending=False).iloc[0]["Publication Date"]
+    df = df[df["Publication Date"] == latest_date].reset_index()
+    expander = st.expander(f"Total Ads: {len(df)} - ({latest_date.date()})", expanded=True)
+    expander.dataframe(df[["Occupation", "Employer Name", "Workplace City"]])
+    return df
 
 def metrics_view(df, column=None):
     df = df[df[column] != "Ej Angiven"]
@@ -12,29 +19,48 @@ def metrics_view(df, column=None):
         st.markdown(f"## Top 5: {column}s")
         show_metrics(df, column, "Vacancies", 5)
 
-def plot_tab(df, column=None):
+def plot_tab(df, column):
+    bar, pie, line = st.tabs(["Overview", "Details", "Jobs Over Time"])
     
-    bar, line, pie = st.tabs(["Barchart", "Linechart", "Piechart"])
-    # line_chart_df = df.groupby(["Publication Date", "Occupation Field"]).size().reset_index(name="Total Ads")
-
-    line_chart_df = df.groupby(["Publication Date", column]).size().reset_index(name="Total Ads")
-    df = aggregate_by_group(df, column)
-    num_groups = st.slider("Number of groups to show", min_value=1, max_value=10, value=5)
+    df = df[(df[column] != "Ej Angiven") & (df[column] != "Not Specified") & (df[column] != "Undefined")]
+    
+    line_chart_df = df.groupby(["Publication Date", "Occupation Field"]).size().reset_index(name="Total Ads")
+    
+    
     with bar:
+        num_groups = st.slider("Number of groups to show", min_value=1, max_value=10, value=5)
+        bar_df = aggregate_by_group(df, column)
         st.markdown("### Total vacancies for top " + str(num_groups) + " " + column)
-        fig = px.bar(df.head(num_groups), x=column, y="Vacancies")
-        st.plotly_chart(fig)
-    
-    with line:
-        st.markdown("### Total job ads for top " + str(num_groups) + " " + column + " by publication date")
-        fig = px.line(line_chart_df.head(num_groups), x="Publication Date", y="Total Ads", color=column)
+        fig = px.bar(bar_df.head(num_groups), x=column, y="Vacancies", color=column)
         st.plotly_chart(fig)
     
     with pie:
-        st.markdown("### Total vacancies for top " + str(num_groups) + " " + column)
-        df = aggregate_by_group(df, column)
-        fig = px.pie(df.head(num_groups), values="Vacancies", names=column)
+        choice = st.pills("select column:", [f"{column}", "Salary Description", "Duration", "Working Hours Type", "Driver License", "Experience Required"], default=column, label_visibility="hidden")
+        st.markdown(f"### Details for {choice} based on total vacancies")
+        df = df[(df[choice] != "Ej Angiven") & (df[choice] != "Not Specified") & (df[choice] != "Undefined") & (df[choice] != "Ej specificerad")]
+        pie_df = aggregate_by_group(df, choice)
+        if pie_df[choice].nunique() > 10:
+            fig = px.pie(pie_df.head(10), values="Vacancies", names=choice, color=choice)
+        else:
+            fig = px.pie(pie_df, values="Vacancies", names=choice, color=choice)
         st.plotly_chart(fig)
+    
+    with line:
+        st.markdown(f"### Total job ads over time by Occupation Field \n ##### ({df["Publication Date"].min().date()} - {df["Publication Date"].max().date()})")
+        fig = px.line(line_chart_df, x="Publication Date", y="Total Ads", color="Occupation Field", line_shape='linear')
+        fig.update_layout(
+            template="plotly_white",  
+            hovermode="x unified",  
+            margin=dict(l=20, r=20, t=60, b=40),
+            height=500,
+        )
+        fig.update_xaxes(
+            tickformat="%Y-%m-%d",  
+            tickangle=45,
+            showgrid=True
+        )
+        st.plotly_chart(fig)
+
 
 def desc_tab(df):
     st.markdown("### Jobbannonsbeskrivning")
@@ -49,3 +75,5 @@ def desc_tab(df):
     else:
         st.dataframe(job_ad[["Employer Name", "Employer Workplace", "Workplace City", "Duration", "Working Hours Type"]])
         st.info(job_ad[job_ad["Description"].notnull()].iloc[0]["Description"])
+        summarize_description(job_ad)
+
