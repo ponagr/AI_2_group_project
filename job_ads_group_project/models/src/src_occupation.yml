@@ -1,0 +1,25 @@
+models:
+  - name: src_occupation
+    description: "Model containing occupation information for job ads, including occupation ID, group, and field"
+    columns:
+      - name: occupation_id
+        description: "Unique identifier for the occupation concept"
+        tests:
+          - not_null
+
+      - name: occupation_group_id
+        description: "Identifier for the occupation group concept"
+
+      - name: occupation_field_id
+        description: "Identifier for the broader occupation field concept"
+
+      - name: occupation
+        description: "Name of the specific occupation"
+        tests:
+          - not_null
+
+      - name: occupation_group
+        description: "Name of the occupation group"
+
+      - name: occupation_field
+        description: "Name of the occupation field"

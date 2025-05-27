@@ -1,0 +1,29 @@
+models:
+  - name: src_employer
+    description: "Model containing employer information for job ads"
+    columns:
+      - name: employer_name
+        description: "Name of the employer as listed in the job ad"
+        tests:
+          - not_null
+
+      - name: employer_workplace
+        description: "Name or title of the workplace associated with the employer"
+
+      - name: employer_organization_number
+        description: "Organization number of the employer"
+
+      - name: workplace_region
+        description: "Geographical region of the job's workplace location"
+
+      - name: workplace_country
+        description: "Country where the job is located"
+
+      - name: workplace_city
+        description: "Municipality where the job is based"
+
+      - name: workplace_street_address
+        description: "Street address of the workplace"
+
+      - name: workplace_postcode
+        description: "Postal code of the job's location"

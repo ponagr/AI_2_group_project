@@ -1,0 +1,20 @@
+models:
+  - name: dim_auxiliary_attributes
+    description: "Dimension table containing auxiliary attributes for job ads, such as experience required, driving license required, and access to own car.
+      Built from `src_auxiliary_attributes`."
+    columns:
+      - name: auxiliary_attributes_id
+        description: "Surrogate key generated from experience, drivers license and access to own car used to join with job ads"
+        tests:
+          - unique
+          - not_null
+          - dim_row_count_match
+
+      - name: experience_required
+        description: "Whether previous experience is required for the job"
+
+      - name: driver_license
+        description: "Whether a drivers license is required for the job"
+
+      - name: access_to_own_car
+        description: "Whether the candidate needs access to their own car"

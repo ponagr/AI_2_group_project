@@ -1,0 +1,57 @@
+models:
+  - name: dim_job_details
+    description: "Dimension table containing detailed information about job advertisements,
+      such as title, description, employment type, salary, and working hours. Built from `src_job_details`."
+    columns:
+      - name: job_details_id
+        description: "Surrogate key generated from the job ad ID"
+        tests:
+          - unique
+          - not_null
+          - dim_row_count_match
+
+      - name: headline
+        description: "Headline of the job ad"
+        tests:
+          - not_null
+
+      - name: description
+        description: "Plain text job description"
+        tests:
+          - not_null
+
+      - name: description_html
+        description: "Formatted (HTML) job description"
+        tests:
+          - not_null
+
+      - name: duration
+        description: "Job duration label (e.g., permanent, temporary)"
+        tests:
+          - not_null
+
+      - name: salary_type
+        description: "Type of salary (e.g., hourly, monthly)"
+        tests:
+          - not_null
+
+      - name: salary_description
+        description: "Free text description of the salary"
+        tests:
+          - not_null
+
+      - name: working_hours_type
+        description: "Type of working hours (e.g., full-time, part-time)"
+        tests:
+          - not_null
+
+      - name: employment_type
+        description: "Type of employment"
+        tests:
+          - not_null
+        
+      - name: scope_of_work_min
+        description: "Minimum scope of work (e.g., % of full-time)"
+      
+      - name: scope_of_work_max
+        description: "Maximum scope of work"

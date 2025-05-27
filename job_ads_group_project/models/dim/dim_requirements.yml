@@ -1,0 +1,22 @@
+models:
+  - name: dim_requirements
+    description: "Dimension table containing job requirements for job ads, such as work experience, and driving license.
+      Data is aggregated from `src_must_skills` and `src_driving_license`, linked via `_dlt_id` in `src_job_ads`."
+    columns:
+      - name: job_requirements_id
+        description: "Surrogate key generated from the job ad's unique identifier."
+        tests:
+          - unique
+          - not_null
+          - dim_row_count_match
+
+      - name: _dlt_id
+        description: "Foreign key used to join with driving license and skills data."
+        tests:
+          - not_null
+
+      - name: required_license
+        description: "Type of driving license required for the job"
+
+      - name: required_skills
+        description: "List of skills required for the job"

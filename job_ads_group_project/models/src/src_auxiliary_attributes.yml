@@ -1,0 +1,21 @@
+models:
+  - name: src_auxiliary_attributes
+    description: "Model containing auxiliary attributes for job ads, such as experience required, driving license required, and access to own car."
+    columns:
+      - name: experience_required
+        description: "Whether previous experience is required for the job"
+        tests:
+          - accepted_values:
+              values: ['true', 'false']
+
+      - name: driving_license_required
+        description: "Whether a drivers license is required for the job"
+        tests:
+          - accepted_values:
+              values: ['true', 'false']
+
+      - name: access_to_own_car
+        description: "Whether the candidate needs access to their own car"
+        tests:
+          - accepted_values:
+              values: ['true', 'false']
