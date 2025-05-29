@@ -1,15 +1,41 @@
 import streamlit as st
 from utils.utils import aggregate_by_group
 from components.kpis import show_metrics
-from gemini.llm import summarize_description
-
+from gemini.llm import summarize_description, overview_description
+from datetime import date, timedelta
 import plotly.express as px
 
-def show_newest_ads(df):
-    latest_date = df.sort_values("Publication Date", ascending=False).iloc[0]["Publication Date"]
-    df = df[df["Publication Date"] == latest_date].reset_index()
-    expander = st.expander(f"Total Ads: {len(df)} - ({latest_date.date()})", expanded=True)
-    expander.dataframe(df[["Occupation", "Employer Name", "Workplace City"]])
+
+def show_newest_ads(df, choice):
+    if choice == "Application deadline today":
+        col = "Application Deadline"
+    else:
+        col = "Publication Date"
+    
+    today = str(date.today())
+    df_today = df[df[col] == today].reset_index()
+    
+    if len(df_today) == 0:
+        if col == "Publication Date":
+            latest_date = df[col].sort_values(col, ascending=False).iloc[0][col]
+            df = df[df[col] == latest_date].reset_index()
+            st.markdown(f"### Total Ads: {len(df)}")
+            st.markdown(f"#### Date: {latest_date.date()}")
+            expander = st.expander(f"Total Ads: {len(df)} - ({latest_date.date()})", expanded=True)
+        else:
+            tomorrow = str(date.today() + timedelta(days=1))
+            df = df[df[col] == tomorrow].reset_index()
+            st.markdown(f"### Total Ads: {len(df)}")
+            st.markdown(f"#### Date: {tomorrow}")
+            expander = st.expander(f"Total Ads: {len(df)} - ({tomorrow})", expanded=True)
+    else:
+        df = df_today
+        st.markdown(f"### Total Ads: {len(df)}")
+        st.markdown(f"#### Date: {today}")
+        expander = st.expander(f"Job Details", expanded=True)
+    
+    expander.dataframe(df[["Occupation", "Employer Name", "Workplace City"]], hide_index=True)
+    
     return df
 
 def metrics_view(df, column=None):
@@ -62,7 +88,7 @@ def plot_tab(df, column):
         st.plotly_chart(fig)
 
 
-def desc_tab(df):
+def desc_tab(df, choice):
     st.markdown("### Jobbannonsbeskrivning")
     
     # Selectbox för Headline
@@ -75,5 +101,7 @@ def desc_tab(df):
     else:
         st.dataframe(job_ad[["Employer Name", "Employer Workplace", "Workplace City", "Duration", "Working Hours Type"]])
         st.info(job_ad[job_ad["Description"].notnull()].iloc[0]["Description"])
-        summarize_description(job_ad)
+        
+    expander = st.expander("Sammanfattning från gemini på filtrerade jobbannonser", expanded=False)
+    expander.info(overview_description(df, choice))
 
