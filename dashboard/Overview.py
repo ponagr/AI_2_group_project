@@ -15,9 +15,10 @@ else:
     st.title(f"Overview for {field}")
 
 
+choice = st.pills("Filter by:", ["Published today", "Application deadline today"], default="Published today")
 tab1, tab2 = st.tabs(["Plots", "Description"])
 with tab1:
-    df_new = show_newest_ads(df)
+    df_new = show_newest_ads(df, choice)
     
     if field == "Alla jobb":
         col = st.pills("select column:", ["Occupation Field", "Occupation Group", "Occupation", "Workplace City", "Employer Workplace", "Salary Description", "Duration", "Working Hours Type", "Driver License", "Experience Required"], default="Occupation Field", label_visibility="hidden")
@@ -25,6 +26,6 @@ with tab1:
         col = st.pills("select column:", ["Occupation Group", "Occupation", "Workplace City", "Employer Workplace", "Salary Description", "Duration", "Working Hours Type", "Driver License", "Experience Required"], default="Occupation Group", label_visibility="hidden")
     plot_df(aggregate_by_group(df_new, col), col)
 with tab2:
-    desc_tab(df_new)
+    desc_tab(df_new, choice)
     
 
