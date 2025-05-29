@@ -3,6 +3,7 @@ import pandas as pd
 from utils.utils import split_unique_cols
 from components.kpis import overview
 
+# filtrerar dataframe utifrån en massa kolumner och returnerar den filtrerade dataframen för plots och metrics i Analytics-page
 def filter_tab(df):
     # Initiate min and max date
     min_date = df["Publication Date"].min().date()

@@ -1,7 +1,7 @@
 import plotly.express as px
 import streamlit as st
 
-# Enkel barplot med val från selectbox
+# Enkel bar och pie chart bredvid varandra för tydlig överblick baserat på val från selectbox i overview page
 def plot_df(df, x_column, y_column="Vacancies"):
     # drop rows with 'Ej Angiven' in column
     df = df[(df[x_column] != "Ej Angiven") & (df[x_column] != "Not Specified") & (df[x_column] != "Undefined")]

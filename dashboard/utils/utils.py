@@ -2,10 +2,12 @@ from pathlib import Path
 import streamlit as st
 import duckdb
 
+# function to load and return dataframe from data warehouse based on choice (query) in dashboard
 def load_data(query):
     db_path = Path(__file__).parents[2] / "job_ads_data_warehouse.duckdb"
     with duckdb.connect(str(db_path)) as con:
         df = con.execute(f"SELECT * FROM {query}").df()
+    # changes column names for cleaner text in dashboard
     df.columns = df.columns.str.replace("_", " ").str.title()
     return df
 
@@ -30,6 +32,7 @@ def get_sorted_group_labels(df, group_col, agg_col="Vacancies", agg="sum"):
     
     return sorted_df
 
+# groups dataframe column with total vacancies, used for plotting and metrics
 def aggregate_by_group(df, group_col, agg_col="Vacancies"):
     return df.groupby(group_col)[agg_col].sum().reset_index().sort_values(agg_col, ascending=False)
 
@@ -45,5 +48,6 @@ def filter_selectbox(cols, selected):
             cols.remove(string)
     return cols
 
+# filters df
 def filter_df(df, column, statement):
     return df[df[column] == statement]
