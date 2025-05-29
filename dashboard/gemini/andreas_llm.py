@@ -9,6 +9,11 @@ import pandas as pd
 
 system_instruction = "Du är en Talent Acquisition Specialist på en HR-byrå. Ditt uppdrag är att analysera flera jobbannonser som kan användas internt för att förstå arbetsmarknadens krav och trender."
 
+class Summarize_description(BaseModel):
+    summary: str
+    krav: list[str]
+    meriterande: list[str]
+
 class Total_skills(BaseModel):
     required: list[str]
     required_count: list[int]
@@ -19,6 +24,44 @@ def get_client():
     load_dotenv()
     return genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+def summarize_description(df):
+    client = get_client()
+    
+    headline = st.selectbox("Select a headline to summarize the job description",["Select job ad"] + df["Headline"].unique().tolist())
+    df = df[df["Headline"] == headline]
+    
+    if df["Description"].str.len().iloc[0] < 1000:
+        st.warning("Description is not long enough for summarization")
+        st.markdown("### Original description")
+        st.info(df["Description"].iloc[0])
+    else:
+        st.dataframe(df)
+        description = " ".join(df["Description"])
+        prompt = f"""
+        Sammanfatta följande jobbannons på ett kortfattat och informativt sätt.
+
+        Fokusera på:
+        1. Arbetsuppgifter
+        2. Krav och kvalifikationer
+        3. Meriterande egenskaper eller erfarenheter
+        4. Övrig viktig information
+        
+        Håll det till 5 meningar
+        
+        Här är jobbannonsen:
+        {description}
+        """
+        
+        response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                config={
+                    "system_instruction": system_instruction
+                },
+                contents=prompt
+        )
+
+        st.info(response.text)
+    
 def summarize_occupation_group(df):
     client = get_client()
 
