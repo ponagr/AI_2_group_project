@@ -25,7 +25,7 @@ select
     scope_of_work_max,
     vacancies,
     relevance,
-    application_deadline,
+    CAST(application_deadline AS DATE) as application_deadline,
     experience_required,
     driver_license,
     access_to_own_car,
