@@ -6,13 +6,13 @@ def render_sidebar():
     # Vyer för olika marts
     page = {
         "Alla jobb": "mart.mart_full_job_ads", 
-        "Transport, Distribution, Lager": "mart.mart_transport_distrubution_layer",
-        "Installation, Drift, Underhåll": "mart.mart_installation_maintenence",
+        "Transport, Distribution, Lager": "mart.mart_transport_distribution",
+        "Installation, Drift, Underhåll": "mart.mart_installation_maintenance",
         "Hotell, Restaurang, Storhushåll": "mart.mart_hotel_restaurant"
     }
 
     # Hämta df baserat på val av vy
-    view_choice = st.sidebar.selectbox("Välj vy", list(page.keys()))
+    view_choice = st.sidebar.selectbox("Select view", list(page.keys()))
     
     df = load_data(page[view_choice])
     st.session_state["df"] = df

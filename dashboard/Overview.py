@@ -3,6 +3,7 @@ from components.sidebar import render_sidebar
 from components.dashboard_views import desc_tab, show_ads
 from components.plots import plot_df
 from utils.utils import aggregate_by_group
+from gemini.llm import overview_description
 
 # First page(Home-page) in dashboard, for getting a quick overview of relevant job ads
 st.set_page_config(page_title="Overview", layout="wide")
@@ -27,8 +28,10 @@ with tab1:
     else:
         col = st.pills("select column:", ["Occupation Group", "Occupation", "Workplace City", "Employer Workplace", "Salary Description", "Duration", "Working Hours Type", "Driver License", "Experience Required"], default="Occupation Group", label_visibility="hidden")
     plot_df(aggregate_by_group(df_new, col), col)
+    
+    expander = st.expander("Gemini summary of filtered job ads", expanded=False)
+    st.markdown(overview_description(df_new, choice), unsafe_allow_html=True)
+
 with tab2:
     # gives some descriptions about the job ads based on the df
     desc_tab(df_new, choice)
-    
-

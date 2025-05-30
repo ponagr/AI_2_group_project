@@ -9,8 +9,8 @@ def plot_df(df, x_column, y_column="Vacancies"):
     bar = px.bar(df, y=y_column, x=x_column, color=x_column)
     pie = px.pie(df, values=y_column, names=x_column, color=x_column)
     if x_column == "Driver License" or x_column == "Experience Required":
-        bar.update_xaxes(tickvals=[True, False], ticktext=["Krav", "Inte Krav"])
-        pie.update_xaxes(tickvals=[True, False], ticktext=["Krav", "Inte Krav"])
+        bar.update_xaxes(tickvals=[True, False], ticktext=["Required", "Not required"])
+        pie.update_xaxes(tickvals=[True, False], ticktext=["Required", "Not required"])
     pie.update_layout(showlegend=False)
     pie.update_traces(textposition="inside")
 

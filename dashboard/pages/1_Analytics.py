@@ -4,8 +4,7 @@ from components.filter_tab import filter_tab
 from components.dashboard_views import plot_tab, metrics_view
 
 # dashboard page used analytics by filtering current dataframe, and getting metrics and plots for the filtered df for easy analysis
-st.set_page_config(page_title="Analytics by Occupation", layout="wide")
-
+st.set_page_config(page_title="Analytics", layout="wide")
 
 df, field = render_sidebar()
 if field == "Alla jobb":
