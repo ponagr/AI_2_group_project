@@ -16,8 +16,6 @@ if len(df) < 10:
 else:
     col1, col2 = st.columns(2)
     with col1:
-        with st.spinner("Awaiting response.."):
-            summarize_occupation_group(df)
+        summarize_occupation_group(df)
     with col2:
-        with st.spinner("Awaiting response.."):
-            skills_per_occupation_group(df)
+        skills_per_occupation_group(df)
