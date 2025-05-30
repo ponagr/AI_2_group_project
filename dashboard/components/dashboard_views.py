@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.utils import aggregate_by_group
 from components.kpis import show_metrics
-from gemini.llm import overview_description
+from gemini.llm import summarize_description
 from datetime import date, timedelta
 import plotly.express as px
 
@@ -18,7 +18,7 @@ def show_ads(df, choice):
     
     if len(df_today) == 0:
         if col == "Publication Date":
-            latest_date = df[col].sort_values(col, ascending=False).iloc[0][col]
+            latest_date = df[col].max()
             df = df[df[col] == latest_date].reset_index()
             st.markdown(f"### Total Ads: {len(df)}")
             st.markdown(f"#### Date: {latest_date.date()}")
@@ -95,19 +95,22 @@ def plot_tab(df, column):
 
 # description tab for filtered df, for getting better understanding of the job, with job description and use of gemini llm for summarization of long descriptions
 def desc_tab(df, choice):
-    st.markdown("### Jobbannonsbeskrivning")
+    st.markdown("### Job Advertisement Description")
     
     # Selectbox för Headline
-    headline = st.selectbox("Matchade jobbannonser baserad på filtrering:",["Välj jobbannons"] + df["Headline"].unique().tolist())
+    headline = st.selectbox("Matched job ads based on filters",["Select a job ad"] + df["Headline"].unique().tolist())
     job_ad = df[df["Headline"] == headline]
     
+    job_ad = job_ad.rename(columns={
+        "Employer Workplace": "Employer",
+        "Workplace City": "City",
+        "Working Hours Type": "Hours"
+        })
+    if headline != "Select a job ad":
+        st.dataframe(job_ad[["Occupation", "Employer", "City", "Duration", "Hours"]], hide_index=True)
     # Annonsbeskrivning för Headline
-    if headline == "Välj jobbannons":
-        st.info("Välj en jobbannons för beskrivning")
+    if headline == "Select a job ad":
+        st.info("Select a job ad to see the description")
     else:
-        st.dataframe(job_ad[["Employer Name", "Employer Workplace", "Workplace City", "Duration", "Working Hours Type"]])
-        st.info(job_ad[job_ad["Description"].notnull()].iloc[0]["Description"])
-        
-    expander = st.expander("Sammanfattning från gemini på filtrerade jobbannonser", expanded=False)
-    expander.info(overview_description(df, choice))
-
+        summarize_description(job_ad)
+    
