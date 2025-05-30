@@ -31,7 +31,7 @@ def summarize_description(df):
         st.markdown("### Original description")
         st.info(df["Description"].iloc[0])
     else:
-        with st.spinner("Awaiting response.."):
+        with st.spinner("Awaiting response..."):
             client = get_client()
             description = " ".join(df["Description"])
             prompt = f"""
@@ -60,8 +60,8 @@ def summarize_description(df):
             st.info(response.text)
     
 def summarize_occupation_group(df):
-    client = get_client()
-    with st.spinner("Awaiting response.."):
+    with st.spinner("Awaiting response..."):
+        client = get_client()
         job_descriptions = df["Description"]
         job_descriptions_text = "\n\n".join(job_descriptions.tolist())
         
@@ -103,8 +103,8 @@ def summarize_occupation_group(df):
 
 # Pie chart över krav och meriterande kvalifikationer för en yrkesgrupp
 def skills_per_occupation_group(df):
-    client = get_client()
-    with st.spinner("Awaiting response.."):
+    with st.spinner("Awaiting response..."):
+        client = get_client()
         job_descriptions = df["Description"]
         job_descriptions_text = "\n\n".join(job_descriptions.tolist())
         

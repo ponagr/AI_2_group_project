@@ -33,7 +33,7 @@ def show_ads(df, choice):
         df = df_today
         st.markdown(f"### Total Ads: {len(df)}")
         st.markdown(f"#### Date: {today}")
-        expander = st.expander(f"Job Details", expanded=True)
+        expander = st.expander(f"Job Details")
     
     expander.dataframe(df[["Occupation", "Employer Name", "Workplace City"]], hide_index=True)
     

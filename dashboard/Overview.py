@@ -28,9 +28,10 @@ with tab1:
     else:
         col = st.pills("select column:", ["Occupation Group", "Occupation", "Workplace City", "Employer Workplace", "Salary Description", "Duration", "Working Hours Type", "Driver License", "Experience Required"], default="Occupation Group", label_visibility="hidden")
     plot_df(aggregate_by_group(df_new, col), col)
-    with st.spinner("Awaiting response.."):
-        expander = st.expander("Gemini summary of filtered job ads", expanded=False)
-        st.markdown(overview_description(df_new, choice), unsafe_allow_html=True)
+    expander = st.expander("Gemini summary of filtered job ads", expanded=False)
+    with expander:
+        with st.spinner("Awaiting response..."):
+            st.markdown(overview_description(df_new, choice), unsafe_allow_html=True)
 
 with tab2:
     # gives some descriptions about the job ads based on the df
