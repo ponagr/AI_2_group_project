@@ -31,32 +31,33 @@ def summarize_description(df):
         st.markdown("### Original description")
         st.info(df["Description"].iloc[0])
     else:
-        client = get_client()
-        description = " ".join(df["Description"])
-        prompt = f"""
-        Sammanfatta följande jobbannons på ett kortfattat och informativt sätt.
+        with st.spinner("Awaiting response.."):
+            client = get_client()
+            description = " ".join(df["Description"])
+            prompt = f"""
+            Sammanfatta följande jobbannons på ett kortfattat och informativt sätt.
 
-        Fokusera på:
-        1. Arbetsuppgifter
-        2. Krav och kvalifikationer
-        3. Meriterande egenskaper eller erfarenheter
-        4. Övrig viktig information
-        
-        Här är jobbannonsen:
-        {description}
-        """
-        
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            config={
-                "system_instruction": system_instruction,
-                "temperature": 0.2
-            },
-            contents=prompt
-        )
+            Fokusera på:
+            1. Arbetsuppgifter
+            2. Krav och kvalifikationer
+            3. Meriterande egenskaper eller erfarenheter
+            4. Övrig viktig information
+            
+            Här är jobbannonsen:
+            {description}
+            """
+            
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                config={
+                    "system_instruction": system_instruction,
+                    "temperature": 0.2
+                },
+                contents=prompt
+            )
 
-        st.markdown("### llm summarized description")
-        st.info(response.text)
+            st.markdown("### llm summarized description")
+            st.info(response.text)
     
 def summarize_occupation_group(df):
     client = get_client()
