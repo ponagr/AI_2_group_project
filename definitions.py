@@ -30,7 +30,7 @@ db_path = str(Path(__file__).parent / "job_ads_data_warehouse.duckdb")
 
 dlt_resource = DagsterDltResource()
 
-
+# asset for dlt, building pipeline and calling source function to yield job ads data from api
 @dlt_assets(
     dlt_source = jobads_source(),
     dlt_pipeline = dlt.pipeline(
@@ -63,6 +63,7 @@ dbt_resource = DbtCliResource( project_dir=dbt_project_directory, profiles_dir=p
 
 # Compiles the dbt project & allow Dagster to build an asset graph
 
+# asset for running dbt deps
 @dg.asset
 def dbt_deps(dbt: DbtCliResource):
     dbt.cli(["deps"]).wait()

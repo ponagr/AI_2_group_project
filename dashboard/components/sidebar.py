@@ -1,6 +1,7 @@
 import streamlit as st
 from utils.utils import load_data
 
+# sidebar for choosing occupation field and loading dataframe
 def render_sidebar():
     # Vyer för olika marts
     page = {
@@ -18,6 +19,7 @@ def render_sidebar():
     
     box = st.sidebar.container()
     
+    # sidebar metrics for unfiltered total metrics and average vacancies for chosen df
     with box:
         st.markdown("### Total:")
         col1, col2 = st.columns(2)
