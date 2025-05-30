@@ -2,18 +2,162 @@ import streamlit as st
 import plotly.express as px
 import os
 from google import genai
-# from google.generativeai.types import GenerationConfig
-# from google import generativeai as oldGenai
 import os
 import pandas as pd
 import json
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
+system_instruction = "Du är en Talent Acquisition Specialist på en HR-byrå. Ditt uppdrag är att analysera flera jobbannonser som kan användas internt för att förstå arbetsmarknadens krav och trender."
+
+class Summarize_description(BaseModel):
+    summary: str
+    krav: list[str]
+    meriterande: list[str]
+
+class Total_skills(BaseModel):
+    required: list[str]
+    required_count: list[int]
+    preferred: list[str]
+    preferred_count: list[int]
+
+def get_client():
+    load_dotenv()
+    return genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+def summarize_description(df):
+    if df["Description"].str.len().iloc[0] < 1000:
+        st.warning("Description is not long enough for summarization")
+        st.markdown("### Original description")
+        st.info(df["Description"].iloc[0])
+    else:
+        client = get_client()
+        description = " ".join(df["Description"])
+        prompt = f"""
+        Sammanfatta följande jobbannons på ett kortfattat och informativt sätt.
+
+        Fokusera på:
+        1. Arbetsuppgifter
+        2. Krav och kvalifikationer
+        3. Meriterande egenskaper eller erfarenheter
+        4. Övrig viktig information
+        
+        Här är jobbannonsen:
+        {description}
+        """
+        
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            config={
+                "system_instruction": system_instruction,
+                "temperature": 0.2
+            },
+            contents=prompt
+        )
+
+        st.markdown("### llm summarized description")
+        st.info(response.text)
+    
+def summarize_occupation_group(df):
+    client = get_client()
+    job_descriptions = df["Description"]
+    job_descriptions_text = "\n\n".join(job_descriptions.tolist())
+    
+    prompt = f"""
+    Analysera följande jobbannonser inom yrkesgruppen {df["Occupation Group"]}.
+    
+    Uppgift:
+    1. Identifiera och sammanfatta de vanligaste arbetsuppgifterna.
+    2. Lista de mest efterfrågade kompetenserna eller färdigheterna.
+    3. Notera eventuella meriterande kvalifikationer eller personliga egenskaper.
+    4. Identifiera återkommande mönster eller trender (t.ex. fokus på digitalisering, kundkontakt, språkkunskaper, etc).
+
+    Instruktioner:
+    - Skriv i markdown.
+    - Börja endast med `## Sammanfattning av (yrkesgrupp)` sen rubrikerna
+    - Dela upp innehållet med följande rubriker:
+    - `### Arbetsuppgifter`
+    - `### Krav`
+    - `### Meriterande`
+    - `### Trender`
+    - Håll det kortfattat, sakligt och fokuserat på nyckelinsikter.
+    - Baserat enbart på informationen i annonserna.
+    - Håll varje rubrik till 5 punkter
+    
+    Här är jobbannonserna att analysera:
+    {job_descriptions_text}
+    """
+    
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        config={
+            "system_instruction":system_instruction,
+            "temperature": 0.2
+        },
+        contents=prompt
+    )
+    
+    st.markdown(response.text, unsafe_allow_html=True)
+
+# Pie chart över krav och meriterande kvalifikationer för en yrkesgrupp
+def skills_per_occupation_group(df):
+    client = get_client()
+    job_descriptions = df["Description"]
+    job_descriptions_text = "\n\n".join(job_descriptions.tolist())
+    
+    prompt = f"""
+    Du ska analysera jobbannonser inom yrkesgruppen "{df["Occupation Group"]}".
+    Extrahera:
+    1. De 5 vanligaste **kraven** (färdigheter, erfarenheter, utbildning etc).
+    2. De 5 vanligaste **meriterande kvalifikationerna** (önskvärda men ej nödvändiga egenskaper eller kompetenser).
+    3. Räkna hur ofta varje punkt förekommer i texterna.
+
+    Håll varje punkt till max 100 tecken
+    Returnera ett JSON-objekt i detta format:
+    {{
+    "krav": ["krav1", "krav2", ...],
+    "krav_count": [antal1, antal2, ...],
+    "meriterande": ["merit1", "merit2", ...],
+    "meriterande_count": [antal1, antal2, ...]
+    }}
+
+    Analysera endast utifrån texten nedan:
+
+    {job_descriptions_text}
+    """
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        config={
+            "response_mime_type":"application/json",
+            "response_schema":Total_skills,
+            "system_instruction": system_instruction,
+            "temperature": 0.2
+        },
+        contents=prompt
+    )
+    
+    data = json.loads(response.text)
+    
+    required_df = pd.DataFrame({
+        "Skill": data["required"],
+        "Count": data["required_count"]
+    })
+    preferred_df = pd.DataFrame({
+        "Skill": data["preferred"],
+        "Count": data["preferred_count"]
+    })
+
+    st.markdown("## Top 5 Required / Preferred Skills")
+    fig1 = px.pie(required_df, names="Skill", values="Count", title="Summary of Required Skills in Job Ads")
+    fig2 = px.pie(preferred_df, names="Skill", values="Count", title="Summary of Preferred Skills in Job Ads")
+    fig1.update_layout(legend=dict(font=dict(size=14)))
+    fig2.update_layout(legend=dict(font=dict(size=14)))
+    st.plotly_chart(fig1)
+    st.plotly_chart(fig2)
 
 # skapar en tabell med sammanfattad analys på vald dataframe för tydlig överblick med hjälp av gemini llm
 def overview_description(df, choice):
-    load_dotenv()
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = get_client()
     
     if choice == "Published today":
         prompt = f"""
@@ -29,17 +173,20 @@ def overview_description(df, choice):
             
             Använd konkreta exempel om möjligt, och håll det lättläst.
             
-            Jag vill ha output i tabellformat likt detta:
+            Jag vill ha output i markdown likt detta:
             
-            Panelformat Sammanfattning:
-            Element	Beskrivning
-            Dominerande sektor	Hotell, Restaurang, Storhushåll
-            Vanligaste yrken	Köksbiträde, Kock (alla typer), Servitör/Servitris
-            Anställningsform	Heltid (vanligast), Deltid (förekommer frekvent inom restaurang)
-            Erfarenhet	Ofta ett krav, men varierar beroende på tjänst.
-            Körkort	Krävs för vissa tjänster som Taxiförare, Distributionsförare och en köksbiträde.
-            Potentiellt intressant	"Kock, à la carte" kan indikera en mer specialiserad roll.
-            Branschfokus	Starkt fokus på Hotell/Restaurang (kan vara säsongsbetonat).
+            Börja endast med `## Sammanfattning`
+            
+            Element | Beskrivning
+            Dominerande sektor | Hotell, Restaurang, Storhushåll
+            Vanligaste yrken | Köksbiträde, Kock (alla typer), Servitör/Servitris
+            Anställningsform | Heltid (vanligast), Deltid (förekommer frekvent inom restaurang)
+            Erfarenhet | Ofta ett krav, men varierar beroende på tjänst.
+            Körkort | Krävs för vissa tjänster som Taxiförare, Distributionsförare och en köksbiträde.
+            Potentiellt intressant | "Kock, à la carte" kan indikera en mer specialiserad roll.
+            Branschfokus | Starkt fokus på Hotell/Restaurang (kan vara säsongsbetonat).
+            Plus yttligare kommentarer i punktlista(om relevant)
+            
         """
     else:
         prompt = f"""
@@ -55,20 +202,28 @@ def overview_description(df, choice):
 
             Använd konkreta exempel om möjligt, och håll det lättläst.
             
-            Jag vill ha output i tabellformat likt detta:
+            Jag vill ha output i markdown likt detta:
             
-            Panelformat Sammanfattning:
-            Element	Beskrivning
-            Dominerande sektor	Hotell, Restaurang, Storhushåll
-            Vanligaste yrken	Köksbiträde, Kock (alla typer), Servitör/Servitris
-            Anställningsform	Heltid (vanligast), Deltid (förekommer frekvent inom restaurang)
-            Erfarenhet	Ofta ett krav, men varierar beroende på tjänst.
-            Körkort	Krävs för vissa tjänster som Taxiförare, Distributionsförare och en köksbiträde.
-            Potentiellt intressant	"Kock, à la carte" kan indikera en mer specialiserad roll.
-            Branschfokus	Starkt fokus på Hotell/Restaurang (kan vara säsongsbetonat).
+            Börja endast med `## Sammanfattning`
+            
+            Element | Beskrivning
+            Dominerande sektor | Hotell, Restaurang, Storhushåll
+            Vanligaste yrken | Köksbiträde, Kock (alla typer), Servitör/Servitris
+            Anställningsform | Heltid (vanligast), Deltid (förekommer frekvent inom restaurang)
+            Erfarenhet | Ofta ett krav, men varierar beroende på tjänst.
+            Körkort | Krävs för vissa tjänster som Taxiförare, Distributionsförare och en köksbiträde.
+            Potentiellt intressant | "Kock, à la carte" kan indikera en mer specialiserad roll.
+            Branschfokus | Starkt fokus på Hotell/Restaurang (kan vara säsongsbetonat).
+            Plus yttligare kommentarer i punktlista(om relevant)
         """
     
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config={
+            "temperature": 0.2
+        }
+        )
     
     return response.text
 
@@ -123,8 +278,3 @@ def prompts(df):
     #         "arbetsuppgifter"(ny rad)
     #         "efterfrågade styrkor, färdigheter, krav, och egenskaper"  
     #     """
-    
-    
-
-
-
