@@ -20,7 +20,7 @@ contourpy==1.3.2
 croniter==5.0.1
 cycler==0.12.1
 daff==1.4.2
-dagster==1.10.13
+dagster==1.10.16
 dagster-dbt==0.26.13
 dagster-dlt==0.26.13
 dagster-graphql==1.10.13
